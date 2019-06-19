@@ -27,7 +27,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
              $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
           }     
          $qb->andWhere('u.type=:type')->setParameter('type','superviseur') 
-         ->andWhere('p.campagne=:campagne')->setParameter('campagne',$campagne);
+         ->andWhere('u.campagne=:campagne')->setParameter('campagne',$campagne);
          $qb
          ->select('u.username')
          ->addSelect('u.nom as sup')

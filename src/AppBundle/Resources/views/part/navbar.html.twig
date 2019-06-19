@@ -28,7 +28,7 @@
 </div>  
   <a class="btn btn-info" href="{{ path('campagne_index') }}" >
       {% if app.session.has('campagne') and app.session.get('campagne') is not null %}
-        {{app.session.get('campagne').nom}} ({{app.session.get('campagne').description}}) 
+        {{app.session.get('campagne')['nom']}} ({{app.session.get('campagne')['description']}}) 
         {% else %}
             Selectionnez une activité pour voir les données 
         {% endif %}

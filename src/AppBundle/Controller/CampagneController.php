@@ -34,7 +34,7 @@ class CampagneController extends Controller
     public function showAction(Campagne $campagne)
     {
         
-         $session = $this->getRequest()->getSession();
+          $session = $this->getRequest()->getSession();
           $session->set('campagne',$campagne);
 
         return $this->redirectToRoute('homeuser', array('id' => $campagne->getId()));
