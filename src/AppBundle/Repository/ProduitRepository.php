@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
-
+use AppBundle\Entity\Campagne;
 /**
  * ProduitRepository
  *
@@ -11,9 +11,19 @@ namespace AppBundle\Repository;
 class ProduitRepository extends \Doctrine\ORM\EntityRepository
 {
 
-	    public  function produits($startDate=null, $endDate=null){
+      public function findByCampagne(Campagne $campagne){
+           $qb = $this->createQueryBuilder('p')
+           ->where('p.campagne=:campagne')->setParameter('campagne', $campagne);
+         return $qb->getQuery()->getResult();  
+  }
 
-        $qb = $this->createQueryBuilder('p')->leftJoin('p.lignes', 'l')->leftJoin('l.commende', 'c');
+  
+	    public  function venteProduit(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
+        $qb = $this->createQueryBuilder('p')
+        ->leftJoin('p.lignes', 'l')
+        ->leftJoin('l.commende', 'c')
+        ->where('p.type=:type')->setParameter('type','produit')
+           ->andWhere('p.campagne=:campagne')->setParameter('campagne',$campagne);
          if($startDate!=null){
               $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -23,6 +33,7 @@ class ProduitRepository extends \Doctrine\ORM\EntityRepository
          $qb->select('p.id')
          ->addSelect('p.nom')
          ->addSelect('sum(l.quantite) as nombre')
+         ->addSelect('sum(l.gratuite) as gratuite')
          ->addGroupBy('p.id')
          ->addGroupBy('p.nom');
            return $qb->getQuery()->getArrayResult(); 

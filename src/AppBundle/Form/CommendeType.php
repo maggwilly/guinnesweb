@@ -17,7 +17,9 @@ class CommendeType extends AbstractType
     {
         $builder
         ->add('description')
+        ->add('commentaires')
         ->add('typeInsident')
+         ->add('nombreRessources')
         ->add('date','datetime', array(
               'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',

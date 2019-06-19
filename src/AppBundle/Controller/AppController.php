@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les anno
 use FOS\RestBundle\View\View; 
 use AppBundle\Entity\PointVente;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use AppBundle\Entity\Campagne;
 /**
  * Etape controller.
  *
@@ -23,7 +24,7 @@ class AppController extends Controller
      * Lists all etape entities.
      *
      */
-    public function indexAction()
+    public function indexAction(Campagne $campagne=null)
     {   
         $session = $this->getRequest()->getSession();
         $em = $this->getDoctrine()->getManager();
@@ -38,24 +39,29 @@ class AppController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate');
         $endDate=$session->get('endDate');
-        
-        $produits=$em->getRepository('AppBundle:Produit')->produits($startDate,$endDate);
-        $countAndCashByWeek= $em->getRepository('AppBundle:Ligne')->countAndCashByWeek($startDate,$endDate);
-        $countAndCashByMonth= $em->getRepository('AppBundle:Ligne')->countAndCashByMonth($startDate,$endDate);
-         $workedDays=$em->getRepository('AppBundle:PointVente')->recapPeriode($startDate,$endDate,true);
-        $workedSuperviseur=$em->getRepository('AppBundle:User')->workedSuperviseur($startDate,$endDate);
+
+        if ($campagne==null) {
+          return  $this->redirectToRoute('homepage');
+        }
+
+        $venteProduits=$em->getRepository('AppBundle:Produit')->venteProduit($campagne,$startDate,$endDate,$region);
+        $countAndCashByWeek= $em->getRepository('AppBundle:Ligne')->countAndCashByWeek($campagne,$startDate,$endDate,$region);
+        $countAndCashByMonth= $em->getRepository('AppBundle:Ligne')->countAndCashByMonth($campagne,$startDate,$endDate,$region);
+
+        $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$startDate,$endDate,$region);
+        $venteSuperviseur=$em->getRepository('AppBundle:User')->venteSuperviseur($campagne,$startDate,$endDate,$region);
+
         $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
-        $rapports=$em->getRepository('AppBundle:Commende')->rapports($startDate,$endDate);
+        $rapportInsident=$em->getRepository('AppBundle:Commende')->rapportInsident($campagne,$startDate,$endDate,$region);
         return $this->render('AppBundle::index.html.twig', 
           array(
             'colors'=>$colors,
-            'workedDays'=>$workedDays,
-            'produits'=>$produits,
-            'rapports'=>$rapports,
-            'workedSuperviseur'=>$workedSuperviseur,
+            'ventePointVentes'=>$ventePointVentes,
+            'venteProduits'=>$venteProduits,
+            'rapportInsident'=>$rapportInsident,
+            'venteSuperviseur'=>$venteSuperviseur,
             'countAndCashByMonth'=>$countAndCashByMonth,
             'countAndCashByWeek'=>$countAndCashByWeek,
-
           ));
     }
 
@@ -66,17 +72,17 @@ class AppController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate','first day of this month');
         $endDate=$session->get('endDate', 'last day of this month');
-        $counts= $em->getRepository('AppBundle:Ligne')->counts($startDate,$endDate);
+        $campagne=$session->get('campagne');
+        $ventes= $em->getRepository('AppBundle:PointVente')->ventes($campagne,$startDate,$endDate,$region);
         return $this->render('AppBundle::part/kpi.html.twig', 
           array(
-            'counts'=>$counts[0],
+            'ventes'=>$ventes[0],
           ));
     }
 
 
     public function setPeriodeAction(Request $request)
     {
-  
         $region=$request->request->get('region');
         $periode= $request->request->get('periode');
         $dates = explode(" - ", $periode);
@@ -97,6 +103,14 @@ class AppController extends Controller
     }
 
 
+    public function setRegionAction(Request $request)
+    {
+        $region=$request->query->get('region');
+         $session = $this->getRequest()->getSession();
+        $session->set('region',$region);
+       $referer = $this->getRequest()->headers->get('referer');   
+         return new RedirectResponse($referer);
+    }
 
 
 
@@ -117,12 +131,6 @@ class AppController extends Controller
         if (!$user) { // L'utilisateur n'existe pas
             return $this->invalidCredentials();
         }
-       /** $encoder = $this->get('security.password_encoder');
-        $isPasswordValid = $encoder->isPasswordValid($user, $credentials->getPassword());
-
-        if (!$isPasswordValid) { // Le mot de passe n'est pas correct
-            return $this->invalidCredentials();
-        }*/
         $authToken=AuthToken::create($user);
         $em->persist($authToken);
         $em->flush();

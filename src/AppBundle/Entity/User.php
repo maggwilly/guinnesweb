@@ -189,7 +189,12 @@ class User extends BaseUser
     /**
      * Constructor
      */
- 
+     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Campagne")
+     * @var User
+     */
+    private $campagne;
+
  public function __construct()
     {
         parent::__construct();
@@ -459,4 +464,28 @@ class User extends BaseUser
     {
         return $this->secteur;
     }
+
+     /**
+     * Set campagne
+     *
+     * @param \AppBundle\Entity\Campagne $campagne
+     *
+     * @return PointVente
+     */
+    public function setCampagne(\AppBundle\Entity\Campagne $campagne = null)
+    {
+        $this->campagne = $campagne;
+
+        return $this;
+    }
+
+    /**
+     * Get campagne
+     *
+     * @return \AppBundle\Entity\Campagne
+     */
+    public function getCampagne()
+    {
+        return $this->campagne;
+    }   
 }

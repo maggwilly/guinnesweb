@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
-
+use AppBundle\Entity\Campagne;
 /**
  * UserRepository
  *
@@ -10,21 +10,25 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
-    public   function workedSuperviseur($startDate=null, $endDate=null,$all=false){
+    public   function venteSuperviseur(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
 
-        $qb = $this->createQueryBuilder('u')->leftJoin('u.pointVentes','p')->leftJoin('p.commendes','c')->leftJoin('c.lignes','l');
+        $qb = $this->createQueryBuilder('u')
+        ->leftJoin('u.pointVentes','p')
+        ->leftJoin('p.commendes','c')
+        ->leftJoin('c.lignes','l');
          if($startDate!=null){
-              $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
+            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
           if($endDate!=null){
              $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
           }     
-           $qb->andWhere('u.type=:type')->setParameter('type','superviseur');
+         $qb->andWhere('u.type=:type')->setParameter('type','superviseur')
+           ->andWhere('u.campagne=:campagne')->setParameter('campagne',$campagne);
          $qb->select('u.id')
          ->addSelect('u.username')
-        ->addSelect('u.nom')
-         ->addSelect('sum(l.quantite) as nombre')
-         ->addSelect('count(DISTINCT p.id) as nombrefs')
+         ->addSelect('u.nom')
+         ->addSelect('sum(l.quantite) as quantite')
+         ->addSelect('count(DISTINCT p.id) as nombrepv')
          ->addGroupBy('u.id')
          ->addGroupBy('u.username')
          ->addGroupBy('u.nom');

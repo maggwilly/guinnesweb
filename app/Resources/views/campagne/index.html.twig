@@ -1,0 +1,47 @@
+{% extends "AppBundle::index.html.twig" %}
+{% block title %}Selectionnez une activité {% endblock %} 
+ {% block header %}
+     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div class="header-body">
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+ {% block corps %}
+    <div class="container-fluid mt--7">
+       <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Choisir une activité pour voir les données</h3>
+            </div>   
+        <div class="table-responsive">
+      <table class="table align-items-center table-flush" id="myTable">
+        <tbody>
+        {% for  campagne in campagnes  %}
+            <tr>
+                <td>
+                    <a href="{{ path('campagne_show', { 'id': campagne.id }) }}">
+                <h2>{{ campagne.nom }}
+                 <p>{{ campagne.description }}</p>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <br>
+       <ul>
+         <a href="{{ path('campagne_new') }}" class="btn btn-lg btn-primary">Créer une activité</a>
+         <br>
+       </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+ {% block footer %}
+   {% endblock %}   
+  {% block chart %}            
+  {% endblock %}

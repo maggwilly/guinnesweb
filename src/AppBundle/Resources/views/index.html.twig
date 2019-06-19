@@ -3,19 +3,19 @@
    {% block title %}Overview {% endblock %} 
    {% block main_content %}
   <!-- Main content -->
-  <div class="main-content">
-  {% include 'AppBundle:part:navbar.html.twig' %}
 
-    <!-- Header -->
+  <div class="main-content">
+     {% include 'AppBundle:part:navbar.html.twig' %}
+    
+  {% block header %}
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
       <div class="container-fluid">
         <div class="header-body">
-          <!-- Card stats -->
-{{ render(controller( 'AppBundle:App:kpi')) }}
-
+        {{ render(controller( 'AppBundle:App:kpi')) }}
         </div>
       </div>
     </div>
+  {% endblock  %}
     <!-- Page content -->
     <div class="container-fluid mt--7">
       {% block corps %}
@@ -25,10 +25,10 @@
             <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">Aperçu des performances des field soldiers</h3>
+                  <h3 class="mb-0">Aperçu des performances POS</h3>
                 </div>
                 <div class="col text-right">
-                  <a href="{{ path("export_excel") }}" class="btn btn-sm btn-primary">Exporter les performances</a>
+                 <!-- <a href="{{ path("export_excel") }}" class="btn btn-sm btn-primary">Exporter les performances</a>-->
                 </div>
               </div>
             </div>
@@ -37,52 +37,64 @@
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col">SUP.</th>
-                    <th scope="col">NOM</th>
-                    <th scope="col">NB jours</th>
-                    <th scope="col">Stions</th>
-                    <th scope="col">Rments</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">SUP</th>
+                    <th scope="col">POS</th>
+                    <th scope="col">Ville</th>
+                    <th scope="col">Qtier.</th>
+                    <th scope="col">Tel.</th>
+                    <th scope="col">Days</th>
+                    <th scope="col">BP.</th>
+                    <th scope="col">Sales</th>
+                    <th scope="col">Gift.</th>
+                    <th scope="col">Target.</th>
                     <th scope="col">%</th>
                   </tr>
                 </thead>
-                {% set dayTarget=6 %}
+                {% set dayTarget=192 %}
                 <tbody>
-                  {% for user in workedDays %}
+                  {% for vente in ventePointVentes %}
                   <tr>
                     <th scope="row">
-                      <a href="{{ path('commendes_list',{'user':user.idsup}) }}">
-                     {{ user.supernom|e }}
+                      <a href="{{ path('commendes_list',{'user':vente.idSup}) }}">
+                      {{ vente.sup|e }}
                    </a>
                     </th>
                     <th scope="row">
-                      <a href="{{ path('commendes_list',{'pointVente':user.id}) }}">
-                     {{ user.fsnom|e }}
+                      <a href="{{ path('commendes_list',{'pointVente':vente.id}) }}">
+                      {{ vente.nom|e }}
                      </a>
                     </th>
                     <td>
-                      {% if is_granted('ROLE_SUPERVISEUR') %}
-                      {{ user.nbjours }}
-                      {% else %}
-                        info restreinte
-                      {% endif %}
+                        {{ vente.ville }}
                     </td>
                     <td>
-                      {{ user.souscription }}
+                        {{ vente.quartier}}
                     </td>
                     <td>
-                      {{ user.renouvellement }}
+                       {{ vente.telGerant}}
                     </td>                                        
                     <td>
-                      {{ user.total }}
+                      {{ vente.nombrejours}}
                     </td>
                     <td>
-                      {% if (user.total*100/(user.nbjours*dayTarget))<100 %}
+                       {{ vente.nombreressources}}
+                    </td> 
+                    <td>
+                       {{ vente.quantite}}
+                    </td>
+                    <td>
+                       {{ vente.gratuite}}
+                    </td>                    
+                     <td>
+                       {{ (vente.nombrejours*dayTarget*vente.nombreressources)}}
+                    </td>                                       
+                    <td>
+                      {% if (vente.quantite*100/(vente.nombrejours*dayTarget*vente.nombreressources))<100 %}
                       <i class="fas fa-arrow-down text-danger mr-3"></i>
                     {% else %}
                       <i class="fas fa-arrow-up text-success mr-3"></i>
                     {% endif %}
-                      {{ (user.total*100/(user.nbjours*dayTarget))|number_format(0, ',', '.') }}%
+            {{ (vente.quantite*100/(vente.nombrejours*dayTarget*vente.nombreressources))|number_format(0, ',', '.') }}%
                     </td>                    
                   </tr
                    {% endfor %}
@@ -99,7 +111,7 @@
                   <h2 class="mb-0">Superviseurs</h2>
                 </div>
                 <div class="col text-right">
-                  <a href="{{ path("export_excel_pointages") }}" class="btn btn-sm btn-primary">Pointages</a>
+                <!-- <a href="{{ path("export_excel_pointages") }}" class="btn btn-sm btn-primary">Pointages</a>-->
                 </div>                
               </div>
             </div>
@@ -109,31 +121,23 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">Nom</th>
-                    <th scope="col">FS</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">POS</th>
+                    <th scope="col">Sales</th>
 
                   </tr>
                 </thead>
-                {% set total=0 %}
-                  {% for item in workedSuperviseur %}
-                     {% set total=total+item.nombre %}
-                  {% endfor %}
                 <tbody>
-                   {% for item in workedSuperviseur %}
+                   {% for item in venteSuperviseur %}
                   <tr>
                     <th scope="row">
                       <a href="{{ path('commendes_list',{'user':item.id}) }}">
                        {{ item.nom|e }}</a>
                     </th>
                     <td>
-                      {% if is_granted('ROLE_SUPERVISEUR') %}
-                         {{ item.nombrefs }}
-                      {% else %}
-                        info restreinte
-                      {% endif %}
+                      {{ item.nombrepv }}
                     </td>
                     <td>
-                      {{ item.nombre }}
+                      {{ item.quantite }}
                     </td>                    
                   </tr>
                 {% endfor %}
@@ -150,22 +154,23 @@
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-light ls-1 mb-1">Evolution</h6>
-                  <h2 class="text-white mb-0">Souscriptions et du chiffre d'affaire</h2>
+                  <h2 class="text-white mb-0">Evolution des ventes </h2>
                 </div>
                 <div class="col">
                   <ul class="nav nav-pills justify-content-end">
-                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[{% for item in countAndCashByMonth %} {{item.nombre}}{% if not loop.last %},{% endif %} {% endfor %}]}],"labels": [{% for item in countAndCashByMonth %} "{{item.month}}" {% if not loop.last %},{% endif %}{% endfor %}]}}' data-prefix="" data-suffix="">
-                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                        <span class="d-none d-md-block">Mois</span>
-                        <span class="d-md-none">M</span>
-                      </a>
-                    </li>
+
                     <li class="nav-item" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[{% for item in countAndCashByWeek %} {{item.nombre}} {% if not loop.last %},{% endif %}{% endfor %}]}],"labels": [{% for item in countAndCashByWeek %} "{{item.weekText}}" {% if not loop.last %},{% endif %}{% endfor %}]}}' data-prefix="" data-suffix="">
-                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
                         <span class="d-none d-md-block">Semaine</span>
                         <span class="d-md-none">W</span>
                       </a>
                     </li>
+                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales" data-update='{"data":{"datasets":[{"data":[{% for item in countAndCashByMonth %} {{item.nombre}}{% if not loop.last %},{% endif %} {% endfor %}]}],"labels": [{% for item in countAndCashByMonth %} "{{item.month}}" {% if not loop.last %},{% endif %}{% endfor %}]}}' data-prefix="" data-suffix="">
+                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                        <span class="d-none d-md-block">Mois</span>
+                        <span class="d-md-none">M</span>
+                      </a>
+                    </li>                    
                   </ul>
                 </div>
               </div>
@@ -180,16 +185,15 @@
           </div>
         </div>
 
-
         <div class="col-xl-4">
           <div class="card shadow">
             <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">Déroulement</h3>
+                  <h3 class="mb-0">Signalement d'insidents</h3>
                 </div>
                   <div class="col text-right">
-                  <a href="{{ path("commendes_list") }}" class="btn btn-sm btn-primary">Rapports</a>
+                 <!-- <a href="{{ path("commendes_list") }}" class="btn btn-sm btn-primary">Rapports</a>-->
                 </div>
               </div>
             </div>
@@ -199,14 +203,14 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">Insidents</th>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">Cas</th>
                   </tr>
                 </thead>
                 <tbody>
-                   {% for item in rapports %}
+                   {% for item in rapportInsident %}
                   <tr>
                     <th scope="row">
-                   <a href="{{ path('commendes_list_insident',{'insident':item.typeInsident}) }}"> {{ item.typeInsident|e }}</a>
+                   <a href="{{ path('commendes_list_insident',{'insident':item.typeInsident|default('Rien à signaler')}) }}"> {{ item.typeInsident|default('Rien à signaler') }}</a>
                     </th>
                     <td>
                       {{ item.nombre }}
@@ -222,7 +226,7 @@
             <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">Par Offre</h3>
+                  <h3 class="mb-0">Par Produit</h3>
                 </div>
                   <div class="col text-right">
 
@@ -234,19 +238,23 @@
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col">Ofrre</th>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">Marque</th>
+                    <th scope="col">Sales</th>
+                     <th scope="col">Gifts</th>
                   </tr>
                 </thead>
                 <tbody>
-                   {% for item in produits %}
+                   {% for item in venteProduits %}
                   <tr>
                     <th scope="row">
                    <a href="#"> {{ item.nom|e }}</a>
                     </th>
                     <td>
                       {{ item.nombre }}
-                    </td>                    
+                    </td> 
+                    <td>
+                      {{ item.gratuite }}
+                    </td>
                   </tr>
                 {% endfor %}
                 </tbody>
@@ -256,10 +264,10 @@
 
         </div>
       </div>
-    {% endblock %}
-
-      <br><br>
-      <!-- Footer -->
+    {% endblock corps%}
+    </div>
+    <br><br>
+    {% block footer %}
       <footer class="footer">
         <div class="row align-items-center justify-content-xl-between">
           <div class="col-xl-6">
@@ -275,8 +283,8 @@
             </ul>
           </div>
         </div>
-      </footer>
-    </div>
+      </footer>  
+    {% endblock %}  
   </div>
   <!-- Argon Scripts -->
   {% endblock %}

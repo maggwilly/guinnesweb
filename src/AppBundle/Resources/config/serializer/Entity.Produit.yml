@@ -5,8 +5,11 @@ AppBundle\Entity\Produit:
             groups: ['produit','ligne','commende']
         nom:
             groups: ['produit','ligne','commende']
-        duree:
+        type:
             groups: ['produit','ligne','commende'] 
         cout:
             groups: ['produit','ligne','commende'] 
+        concurent:
+            groups: ['produit','ligne','commende'] 
+
               

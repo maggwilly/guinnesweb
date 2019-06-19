@@ -15,15 +15,21 @@ class PointVenteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('nom', 'text', array('required' => true,'label'=>'Nom'))
-        ->add('telephone', 'text', array('required' => true,'label'=>'Numero de telephone FS'))
-        ->add('secteur', 'text', array('required' => true,'label'=>'N serie de tablette')) 
-         ->add('nomSecteur', 'text', array('required' => true,'label'=>'Numero Orange Tablette'))        
-        ->add('user', EntityType::class, array(
+         ->add('nom', 'text', array('required' => true,'label'=>'Nom'))
+         ->add('type', 'text', array('required' => true,'label'=>'Type'))
+         ->add('nomGerant', 'text', array('required' => true,'label'=>'nom Gerant'))
+         ->add('telGerant', 'text', array('required' => true,'label'=>'tel Gerant'))
+         ->add('quartier', 'text', array('required' => true,'label'=>'Quartier'))
+         ->add('latitude')
+         ->add('longitude')
+         ->add('description')
+         ->add('user', EntityType::class, array(
             'choice_label' => 'nom',
             'class' => 'AppBundle:User'
             ,'label'=>'Sperviseur'));
-    }/**
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

@@ -2,20 +2,52 @@
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
       <div class="container-fluid">
         <!-- Brand -->
-        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="#">Overview</a>
+<div class="dropdown open">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{app.session.get('region')|default('Toute les villes')}}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Douala'}) }}">Douala</a>
+     <a class="dropdown-item" href="{{ path('set_region',{'region':'Yaoundé'}) }}">Yaoundé</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Edea'}) }}">Edea</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Kribi'}) }}">Kribi</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Bafoussam'}) }}">Bafoussam</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Garoua'}) }}">Garoua</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Dschang'}) }}">Dschang</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Mbalmayo'}) }}">Mbalmayo</a>
+     <a class="dropdown-item" href="{{ path('set_region',{'region':'Bertoua'}) }}">Bertoua</a>
+      <a class="dropdown-item" href="{{ path('set_region',{'region':'Ngaoundere'}) }}">Ngaoundere</a>
+       <a class="dropdown-item" href="{{ path('set_region',{'region':'Maroua'}) }}">Maroua</a>
+        <a class="dropdown-item" href="{{ path('set_region',{'region':'Nkongsamba'}) }}">Nkongsamba</a>
+         <a class="dropdown-item" href="{{ path('set_region',{'region':'Fouban'}) }}">Fouban</a>
+  <a class="dropdown-item" href="{{ path('set_region',{'region':'Sangmelima'}) }}">Sangmelima</a>
+    <a class="dropdown-item" href="{{ path('set_region',{'region':'Ebolowa'}) }}">Ebolowa</a>
+      <a class="dropdown-item" href="{{ path('set_region',{'region':'Bangangte'}) }}">Bangangte</a>
+    <a class="dropdown-item" href="{{ path('set_region') }}">Toute les villes</a>
+  </div>
+</div>  
+  <a class="btn btn-info" href="{{ path('campagne_index') }}" >
+      {% if app.session.has('campagne') and app.session.get('campagne') is not null %}
+        {{app.session.get('campagne').nom}} ({{app.session.get('campagne').description}}) 
+        {% else %}
+            Selectionnez une activité pour voir les données 
+        {% endif %}
+      
+  </a>
+
         <!-- Form -->
         <form method="post" action="{{ path('set_periode') }}" class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
           <div class="form-group mb-0">
             <div class="input-group input-group-alternative">
                 {% set start_date_formated=app.session.get('start_date_formated')?app.session.get('start_date_formated'):app.session.get('start_date_formated')|date('01/m/Y') %}
-    {% set end_date_formated=app.session.get('end_date_formated')? app.session.get('end_date_formated'):app.session.get('end_date_formated')|date('t/m/Y')  %}
-    {% set periode=app.session.get('periode')%}
+            {% set end_date_formated=app.session.get('end_date_formated')? app.session.get('end_date_formated'):app.session   .get('end_date_formated')|date('t/m/Y')  %}
+              {% set periode=app.session.get('periode')%}
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
               </div>
               <input class="form-control" placeholder="période" type="text" name="periode" id="periode"  value="{{start_date_formated}} - {{end_date_formated}}" data-from="{{ start_date_formated}}" data-to="{{ end_date_formated }}">
               <div class="input-group-apend">
-                <button type="submit" class=" input-group-text btn btn-default btn-sm">Rechercher</button>
+                <button type="submit" class="input-group-text btn btn-info btn-sm">Rechercher</button>
               </div>              
             </div>
           </div>

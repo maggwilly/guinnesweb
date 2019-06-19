@@ -10,7 +10,7 @@ commende_performances:
 
 commendes_list_insident:
     path:     /{insident}/list/insident
-    defaults: { _controller: "AppBundle:Commende:listByInsident" }
+    defaults: { _controller: "AppBundle:Commende:listByInsident","insident":'' }
     methods:  [GET, POST]
 
 commendes_list:

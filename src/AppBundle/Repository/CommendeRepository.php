@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\PointVente; 
 use AppBundle\Entity\User; 
 use Doctrine\ORM\NoResultException;
+use AppBundle\Entity\Campagne;
 /**
  * CommendeRepository
  *
@@ -22,8 +23,9 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
          return $qb->getQuery()->getResult();  
   }
 
-  	  	public function findList(User $user=null, PointVente $pointVente=null,$startDate=null, $endDate=null){
-           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p');
+  	  	public function findList(Campagne $campagne,User $user=null, PointVente $pointVente=null,$startDate=null, $endDate=null){
+           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+           ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
            if($pointVente!=null){
            $qb ->andWhere('c.pointVente=:pointVente')->setParameter('pointVente', $pointVente);
             }
@@ -40,8 +42,9 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
   }
 
 
-    public function findByInsidentList($insident,$startDate=null, $endDate=null){
-           $qb = $this->createQueryBuilder('c');
+    public function findByInsidentList(Campagne $campagne,$insident, $startDate=null, $endDate=null){
+           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+           ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
            if($insident!=null){
            $qb ->andWhere('c.typeInsident=:typeInsident')->setParameter('typeInsident', $insident);
             }
@@ -55,8 +58,9 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
   }
 
 
-      public  function rapports($startDate=null, $endDate=null){
-        $qb = $this->createQueryBuilder('c');
+      public  function rapportInsident(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
+        $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+           ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
          if($startDate!=null){
               $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -67,67 +71,6 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
          ->addSelect('count(c.id) as nombre')
          ->addGroupBy('c.typeInsident');
            return $qb->getQuery()->getArrayResult(); 
-  } 
-
- 
-
-
-    public   function workedDays($startDate=null, $endDate=null,$all=false){
-
-        $qb = $this->createQueryBuilder('c')
-        ->join('c.pointVente','p')
-        ->join('p.user','u')
-        ->leftJoin('c.lignes','l');
-         if($startDate!=null){
-              $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
-          }
-          if($endDate!=null){
-             $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
-          }     
-         $qb->select('p.id')
-         ->addSelect('p.nom')
-         ->addSelect('p.telephone')
-         ->addSelect('u.id as idsup')
-         ->addSelect('u.nom as superviseur')
-         ->addSelect('sum(l.quantite) as nombre')
-         ->addSelect('count(DISTINCT c.date) as nombrejours')
-         ->addGroupBy('p.id')
-         ->addGroupBy('p.nom')
-         ->addGroupBy('p.telephone')
-         ->addGroupBy('u.nom')
-         ->addGroupBy('u.id');
-          if (!$all) 
-           return $qb->getQuery()->setMaxResults(11)->getArrayResult();
-        return $qb->getQuery()->getArrayResult(); 
-  } 
-
-    public   function totalWorkedDays($startDate=null, $endDate=null){
-
-        $qb = $this->createQueryBuilder('c');
-         if($startDate!=null){
-              $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
-          }
-          if($endDate!=null){
-             $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
-          }     
-   try {
-    $qb->select('count(DISTINCT c.date) as nombrejours');
-         return $qb->getQuery()->getSingleScalarResult();  
-   } catch (NoResultException $e) {
-        return 0;
-     }
-  } 
-  
-  public   function isThere($id, $startDate){
-        $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
-        ->andWhere('p.id=:id')->setParameter('id', $id)
-        ->andWhere('c.date=:startDate')->setParameter('startDate', new \DateTime($startDate));     
-   try {
-    $qb->select('count(DISTINCT c.date) as nombre');
-         return $qb->getQuery()->getSingleScalarResult();  
-   } catch (NoResultException $e) {
-        return 0;
-     }
   } 
 
 }

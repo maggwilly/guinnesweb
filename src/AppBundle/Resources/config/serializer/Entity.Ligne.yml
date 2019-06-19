@@ -7,6 +7,22 @@ AppBundle\Entity\Ligne:
             groups: ['commende','ligne']
         quantite:
             groups: ['commende','ligne']
-        souscripteur:
-            groups: ['ligne']    
+        share:
+            groups: ['commende','ligne'] 
+        price:
+            groups: ['commende','ligne']
+        frigo:
+            groups: ['commende','ligne']
+        affiche:
+            groups: ['commende','ligne']  
+        autre:
+            groups: ['commende','ligne']
+        gratuite:
+            groups: ['commende','ligne']
+        invalide:
+            groups: ['commende','ligne'] 
+        nombreRessources:
+            groups: ['commende','ligne']
+        mecanisme:
+            groups: ['commende','ligne']      
               

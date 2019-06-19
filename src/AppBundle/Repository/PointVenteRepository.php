@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 use AppBundle\Entity\User; 
+use AppBundle\Entity\Campagne;
 /**
  * PointVenteRepository
  *
@@ -16,75 +17,62 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          return $qb->getQuery()->getResult();  
   }
 
-    public function fiedSoldiersCount( $startDate=null, $endDate=null){
+    public   function ventePointVente(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null,$limit=true){
 
-        $qb = $this->createQueryBuilder('p')->join('p.commendes', 'c');
+      $qb = $this->createQueryBuilder('p')->join('p.user','u')->leftJoin('p.commendes','c')->leftJoin('c.lignes','l');
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
           if($endDate!=null){
-           $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
+             $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
           }     
-try {
-    $qb->select('count(DISTINCT p.id) as nombre');
-         return $qb->getQuery()->getSingleScalarResult();  
-   } catch (NoResultException $e) {
-        return 0;
-     }
+         $qb->andWhere('u.type=:type')->setParameter('type','superviseur') 
+         ->andWhere('p.campagne=:campagne')->setParameter('campagne',$campagne);
+         $qb
+         ->select('u.username')
+         ->addSelect('u.nom as sup')
+         ->addSelect('u.id as idSup')
+         ->addSelect('p.nom')
+         ->addSelect('p.quartier')
+         ->addSelect('p.telGerant')
+         ->addSelect('p.ville')
+         ->addSelect('p.id')
+         ->addSelect('sum(l.gratuite) as gratuite')
+         ->addSelect('sum(l.quantite) as quantite')
+         ->addSelect('count(DISTINCT c.date) as nombrejours')
+         ->addSelect('max(c.nombreRessources) as nombreressources')
+         ->addGroupBy('u.username')
+         ->addGroupBy('p.id')
+         ->addGroupBy('p.nom')
+         ->addGroupBy('p.quartier')
+         ->addGroupBy('p.telGerant')
+         ->addGroupBy('p.ville')
+         ->addGroupBy('u.nom')
+         ->addGroupBy('u.username');
+         if($limit) 
+           return $qb->getQuery()->setMaxResults(10)->getArrayResult();
+        return $qb->getQuery()->getArrayResult(); 
   }
 
-    public function fieldSoldiers( $startDate=null, $endDate=null,$all=false){
 
-        $qb = $this->createQueryBuilder('p')->join('p.commendes', 'c');
+     public   function ventes(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
+      $qb = $this->createQueryBuilder('p')
+      ->leftJoin('p.commendes','c')
+      ->leftJoin('c.lignes','l')
+      ->andWhere('p.campagne=:campagne')
+      ->setParameter('campagne',$campagne);
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
           if($endDate!=null){
-           $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
-          }
-          if (!$all) 
-           return $qb->getQuery()->setMaxResults(10)->getResult();
-
-        return $qb->getQuery()->getResult();   
-  } 
-
-   public  function ventePeriode($startDate=null, $endDate=null){
-
-      $RAW_QUERY ='select u.nom as supernom, fs.nom as fsnom,fs.secteur as fsserietablette, fs.telephone as fstelephone, NULL as fsorange, (case when p.id in(1,2) then l.quantite else 0 end)  as souscription, (case when p.id in(3,4) then l.quantite else 0 end)  as renouvellement, s.nom as snom, s.prenom as sprenom, s.telephone as stelephone, (p.cout*l.quantite) as montant, s.contrat, s.mode from 
-         point_vente fs 
-         join commende c on fs.id=c.point_vente_id 
-         join user_account u  on u.id=fs.user_id
-         left join ligne l on l.commende_id=c.id
-         left join produit p on l.produit_id=p.id 
-         left join souscripteur s on l.souscripteur_id=s.id
-         where c.date>=:startDate and c.date<=:endDate';
-         $statement = $this->_em->getConnection()->prepare($RAW_QUERY);
-         $startDate=new \DateTime($startDate);
-         $endDate=new \DateTime($endDate);
-         $statement->bindValue('startDate', $startDate->format('Y-m-d'));
-         $statement->bindValue('endDate',  $endDate->format('Y-m-d'));
-         $statement->execute();
-       return  $result = $statement->fetchAll();
+             $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
+          }     ;
+         $qb
+        ->select('sum(l.gratuite) as gratuite')
+         ->addSelect('sum(l.quantite) as quantite')
+         ->addSelect('count(DISTINCT c.date) as nombrejours')
+         ->addSelect('count(DISTINCT p.id) as nombrepv');
+        return $qb->getQuery()->getArrayResult(); 
   }
-
-     public  function recapPeriode($startDate=null, $endDate=null, $limit=false){
-
-      $RAW_QUERY ='select u.id as idsup, u.nom as supernom,fs.id, fs.nom as fsnom,fs.secteur as fsserietablette, fs.telephone as fstelephone, sum((case when l.produit_id in(1,2) then l.quantite else NULL end)) as souscription, sum((case when l.produit_id in(3,4) then l.quantite else NULL end))  as renouvellement, sum(l.quantite) as total, count(DISTINCT c.date) as nbjours from 
-         point_vente fs 
-         join commende c on fs.id=c.point_vente_id 
-         join user_account u  on u.id=fs.user_id
-         left join ligne l on l.commende_id=c.id
-         where c.date>=:startDate and c.date<=:endDate
-          group by u.id, fs.id, u.nom,fs.nom, fs.telephone,fs.secteur';
-          if($limit)
-            $RAW_QUERY=$RAW_QUERY.' limit 11';
-
-         $statement = $this->_em->getConnection()->prepare($RAW_QUERY);
-         $startDate=new \DateTime($startDate);
-         $endDate=new \DateTime($endDate);
-         $statement->bindValue('startDate', $startDate->format('Y-m-d'));
-         $statement->bindValue('endDate',  $endDate->format('Y-m-d'));
-         $statement->execute();
-       return  $result = $statement->fetchAll();
-  } 	
+ 	
 }

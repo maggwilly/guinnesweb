@@ -29,23 +29,33 @@ class Produit
     private $nom;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="duree", type="string", length=255)
-     */
-    private $duree;
-
-    /**
      * @var int
      *
-     * @ORM\Column(name="cout", type="integer")
+     * @ORM\Column(name="cout", type="integer", nullable=true)
      */
     private $cout;
+        
+        /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     */
+     private $type;
 
     /**
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ligne", mappedBy="produit", cascade={"persist","remove"})
    */
     private $lignes;
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Campagne")
+     * @var User
+     */
+    private $campagne;
+        /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Produit", cascade={"persist","remove"})
+     * @var User
+     */
+    protected $concurent;
     /**
      * Get id
      *
@@ -81,27 +91,27 @@ class Produit
     }
 
     /**
-     * Set duree
+     * Set type
      *
-     * @param string $duree
+     * @param string $type
      *
-     * @return Produit
+     * @return PointVente
      */
-    public function setDuree($duree)
+    public function setType($type)
     {
-        $this->duree = $duree;
+        $this->type = $type;
 
         return $this;
     }
 
     /**
-     * Get duree
+     * Get type
      *
      * @return string
      */
-    public function getDuree()
+    public function getType()
     {
-        return $this->duree;
+        return $this->type;
     }
 
     /**
@@ -160,5 +170,59 @@ class Produit
     public function getLignes()
     {
         return $this->lignes;
+    }
+
+    /**
+     * Set concurent
+     *
+     * @param \AppBundle\Entity\Produit $concurent
+     * @return Produit
+     */
+    public function setConcurent(\AppBundle\Entity\Produit $concurent = null)
+    {
+        $this->concurent = $concurent;
+
+        return $this;
+    }
+
+    /**
+     * Get concurent
+     *
+     * @return \AppBundle\Entity\Produit 
+     */
+    public function getConcurent()
+    {
+        return $this->concurent;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lignes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set campagne
+     *
+     * @param \AppBundle\Entity\Campagne $campagne
+     *
+     * @return Produit
+     */
+    public function setCampagne(\AppBundle\Entity\Campagne $campagne = null)
+    {
+        $this->campagne = $campagne;
+
+        return $this;
+    }
+
+    /**
+     * Get campagne
+     *
+     * @return \AppBundle\Entity\Campagne
+     */
+    public function getCampagne()
+    {
+        return $this->campagne;
     }
 }

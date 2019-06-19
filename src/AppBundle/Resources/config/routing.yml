@@ -6,6 +6,11 @@ app_produit:
     resource: "@AppBundle/Resources/config/routing/produit.yml"
     prefix:   /produit
 
+app_campagne:
+    resource: "@AppBundle/Resources/config/routing/campagne.yml"
+    prefix:   /campagne
+
+
 app_point_vente:
     resource: "@AppBundle/Resources/config/routing/pointvente.yml"
     prefix:   /point/vente
@@ -20,7 +25,12 @@ kpi:
 
 homepage:
     path:     /
-    defaults: { _controller: "AppBundle:App:index" }
+    defaults: { _controller: "AppBundle:Campagne:index" }
+    methods:  GET
+
+homeuser:
+    path:     /{id}/home
+    defaults: { _controller: "AppBundle:App:index", "id":0 }
     methods:  GET
 
 export_excel:
@@ -38,4 +48,9 @@ set_periode:
     path:     /set/periode
     defaults: { _controller: "AppBundle:App:setPeriode" }
     methods:  POST
+
+set_region:
+    path:     /set/region
+    defaults: { _controller: "AppBundle:App:setRegion" }
+    methods:  GET
 

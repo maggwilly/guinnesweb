@@ -51,6 +51,7 @@ class PointVenteController extends Controller
              $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository('AppBundle:User')->findOneById($request->headers->get('X-User-Id'));
             $pointVente->setUser($user);
+            $pointVente->setCampagne($user->getCampagne());
             $em->persist($pointVente);
             $em->flush();
             return $pointVente;

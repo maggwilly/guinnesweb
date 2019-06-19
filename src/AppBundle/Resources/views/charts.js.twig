@@ -430,10 +430,10 @@ var OrdersChart = (function() {
 		var ordersChart = new Chart($chart, {
 			type: 'pie',
 			data: {
-			labels: [{% for item in produits %} "{{item.nom}}" {% if not loop.last %},{% endif %}{% endfor %}],
+			labels: [{% for item in venteProduits %} "{{item.nom}}" {% if not loop.last %},{% endif %}{% endfor %}],
 			datasets: [{
 					label: 'Type de contrat',
-					data: [{% for item in produits %} {{item.nombre}}{% if not loop.last %},{% endif %} {% endfor %}],
+					data: [{% for item in venteProduits %} {{item.nombre}}{% if not loop.last %},{% endif %} {% endfor %}],
                backgroundColor: [{% for color in colors  %}"{{ color}}",{%endfor%}],
                hoverBackgroundColor: [{% for color in colors  %}"{{ color}}",{%endfor%}]
 				}]

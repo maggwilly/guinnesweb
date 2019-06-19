@@ -9,9 +9,9 @@ use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les anno
 use FOS\RestBundle\View\View;
 use AppBundle\Entity\PointVente; 
 use AppBundle\Entity\User; 
+
 /**
  * Commende controller.
- *
  */
 class CommendeController extends Controller
 {
@@ -64,7 +64,7 @@ class CommendeController extends Controller
         ));
     }
 
-    public function listByInsidentAction(Request $request,$insident)
+    public function listByInsidentAction(Request $request,$insident=null)
     {
         $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
@@ -83,6 +83,7 @@ class CommendeController extends Controller
                          'countAndCashByWeek'=>$countAndCashByWeek,
               'produits'=>$produits, ));
     }
+
 
     public function listAction(Request $request,User $user=null, Pointvente $pointVente=null)
     {
@@ -158,7 +159,7 @@ class CommendeController extends Controller
     public function editJsonAction(Request $request, Commende $commende)
     {
         $editForm = $this->createForm('AppBundle\Form\CommendeType', $commende);
-        $editForm->submit($request);
+        $editForm->submit($request->request->all());
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             return  $commende;

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 use Doctrine\ORM\NoResultException;
+use AppBundle\Entity\Campagne;
 /**
  * LigneRepository
  *
@@ -12,41 +13,11 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
 {
 
 
-       public  function counts($startDate=null, $endDate=null){
-
-      $RAW_QUERY ='select  sum((case when l.produit_id in(1,2) then l.quantite else NULL end)) as souscription, sum((case when l.produit_id in(3,4) then l.quantite else NULL end))  as renouvellement, sum(l.quantite) as total, count(DISTINCT c.date) as nbjours, count(DISTINCT fs.id) as nbfs from 
-         point_vente fs 
-          join commende c on fs.id=c.point_vente_id 
-          left join ligne l on l.commende_id=c.id
-         where c.date>=:startDate and c.date<=:endDate ';
-         $statement = $this->_em->getConnection()->prepare($RAW_QUERY);
-         $startDate=new \DateTime($startDate);
-         $endDate=new \DateTime($endDate);
-         $statement->bindValue('startDate', $startDate->format('Y-m-d'));
-         $statement->bindValue('endDate',  $endDate->format('Y-m-d'));
-         $statement->execute();
-       return  $result = $statement->fetchAll();
-  }
-
-
-   public function countAndCash( $startDate=null, $endDate=null,PointVente $pointVente=null){
-        $qb = $this->createQueryBuilder('l')->join('l.commende', 'c')->join('l.produit', 'p');
-         if($startDate!=null){
-           $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
-          }
-          if($endDate!=null){
-           $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
-          } 
-         if ($pointVente!=null) {
-             $qb->andWhere('c.pointVente=:pointVente')->setParameter('pointVente', $pointVente);
-          }    
-       $qb->select('sum(l.quantite) as nombre')
-       ->addSelect('sum(l.quantite*p.cout) as total');
-         return $qb->getQuery()->getArrayResult();  
-  }
-
-   public function countAndCashByWeek( $startDate=null, $endDate=null){
-        $qb = $this->createQueryBuilder('l')->join('l.commende', 'c')->join('l.produit', 'p');
+   public function countAndCashByWeek(Campagne $campagne=null, $startDate=null, $endDate=null,$ville=null){
+        $qb = $this->createQueryBuilder('l')
+        ->join('l.commende', 'c')
+        ->join('l.produit', 'p')
+         ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -57,14 +28,16 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
        $qb->addOrderBy('c.week','asc')
        ->select('c.weekText')
        ->addSelect('sum(l.quantite) as nombre')
-       ->addSelect('sum(l.quantite*p.cout) as total')
        ->addGroupBy('c.week')
        ->addGroupBy('c.weekText');
          return $qb->getQuery()->getArrayResult();  
   }
 
-   public function countAndCashByMonth( $startDate=null, $endDate=null){
-        $qb = $this->createQueryBuilder('l')->join('l.commende', 'c')->join('l.produit', 'p');
+   public function countAndCashByMonth(Campagne $campagne=null, $startDate=null, $endDate=null,$ville=null){
+        $qb = $this->createQueryBuilder('l')
+        ->join('l.commende', 'c')
+        ->join('l.produit', 'p')
+        ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -75,7 +48,6 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
        $qb->addOrderBy('c.monthNumber','asc')
        ->select('c.month')
        ->addSelect('sum(l.quantite) as nombre')
-       ->addSelect('sum(l.quantite*p.cout) as total')
         ->addGroupBy('c.monthNumber')
        ->addGroupBy('c.month');
          return $qb->getQuery()->getArrayResult();  

@@ -68,6 +68,12 @@ class Commende
     /**
      * @var int
      *
+     * @ORM\Column(name="commentaires", type="string", length=255, nullable=true)
+     */
+    private $commentaires;
+    /**
+     * @var int
+     *
      * @ORM\Column(name="month", type="string", length=255, nullable=true)
      */
     private $month;
@@ -88,6 +94,11 @@ class Commende
    */
     private $lignes;
 
+    /**
+     * @var int
+     * @ORM\Column(name="nombre_ressources", type="integer", nullable=true)
+     */
+    private $nombreRessources;
 
     /**
      * Constructor
@@ -149,6 +160,29 @@ class Commende
     }
   }
 
+    /**
+     * Set nombreRessources
+     *
+     * @param integer $nombreRessources
+     *
+     * @return Ligne
+     */
+    public function setNombreRessources($nombreRessources)
+    {
+        $this->nombreRessources = $nombreRessources;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreRessources
+     *
+     * @return integer
+     */
+    public function getNombreRessources()
+    {
+        return $this->nombreRessources;
+    }
 
     /**
      * Set week
@@ -393,5 +427,29 @@ class Commende
     public function getMonthNumber()
     {
         return $this->monthNumber;
+    }
+
+    /**
+     * Set commentaires
+     *
+     * @param string $commentaires
+     *
+     * @return Commende
+     */
+    public function setCommentaires($commentaires)
+    {
+        $this->commentaires = $commentaires;
+
+        return $this;
+    }
+
+    /**
+     * Get commentaires
+     *
+     * @return string
+     */
+    public function getCommentaires()
+    {
+        return $this->commentaires;
     }
 }

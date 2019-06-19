@@ -28,30 +28,88 @@ class PointVente
      */
     private $nom;
 
+        /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+     private $type;
+
     /**
      * @var string
      *
-     * @ORM\Column(name="telephone", type="string", length=255)
+     * @ORM\Column(name="telephone", type="string", length=255, nullable=true)
      */
     private $telephone;
+   
+   /**
+     * @var string
+     * @ORM\Column(name="ville", type="string", length=255,nullable=true)
+     */
+    private $ville;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomGerant", type="string", length=255, nullable=true)
+     */
+    private $nomGerant;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telGerant", type="string", length=255, nullable=true)
+     */
+    private $telGerant;
    /**
      * @var string
      * @ORM\Column(name="secteur", type="string", length=255,nullable=true)
      */
     private $secteur;
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quartier", type="string", length=255, nullable=true)
+     */
+    private $quartier;
        /**
      * @var string
      * @ORM\Column(name="nom_secteur", type="string", length=255,nullable=true)
      */
     private $nomSecteur;
+
+        /**
+     * @var string
+     *
+     * @ORM\Column(name="latitude",  type="decimal", precision=10, scale=6, nullable=true)
+     */
+    private $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longitude", type="decimal", precision=10, scale=6, nullable=true)
+     */
+    private $longitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
         /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User",inversedBy="pointVentes")
      * @var User
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Campagne",inversedBy="pointVentes")
+     * @var User
+     */
+    private $campagne;
 
         /**
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Commende", mappedBy="pointVente", cascade={"persist","remove"})
@@ -132,7 +190,8 @@ class PointVente
     public function setUser(\AppBundle\Entity\User $user = null)
     {
         $this->user = $user;
-
+        if($user!=null)
+            $this->setVille($user->getVille());
         return $this;
     }
 
@@ -226,5 +285,218 @@ class PointVente
     public function getCommendes()
     {
         return $this->commendes;
+    }
+        /**
+     * Set ville
+     *
+     * @param string $ville
+     * @return PointVente
+     */
+    public function setVille($ville)
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * Get ville
+     *
+     * @return string 
+     */
+    public function getVille()
+    {
+        return $this->ville;
+    }
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return PointVente
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set nomGerant
+     *
+     * @param string $nomGerant
+     *
+     * @return PointVente
+     */
+    public function setNomGerant($nomGerant)
+    {
+        $this->nomGerant = $nomGerant;
+
+        return $this;
+    }
+
+    /**
+     * Get nomGerant
+     *
+     * @return string
+     */
+    public function getNomGerant()
+    {
+        return $this->nomGerant;
+    }
+
+    /**
+     * Set telGerant
+     *
+     * @param string $telGerant
+     *
+     * @return PointVente
+     */
+    public function setTelGerant($telGerant)
+    {
+        $this->telGerant = $telGerant;
+
+        return $this;
+    }
+
+    /**
+     * Get telGerant
+     *
+     * @return string
+     */
+    public function getTelGerant()
+    {
+        return $this->telGerant;
+    }
+
+    /**
+     * Set quartier
+     *
+     * @param string $quartier
+     *
+     * @return PointVente
+     */
+    public function setQuartier($quartier)
+    {
+        $this->quartier = $quartier;
+
+        return $this;
+    }
+
+    /**
+     * Get quartier
+     *
+     * @return string
+     */
+    public function getQuartier()
+    {
+        return $this->quartier;
+    }
+
+    /**
+     * Set latitude
+     *
+     * @param string $latitude
+     *
+     * @return PointVente
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * Get latitude
+     *
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitude
+     *
+     * @param string $longitude
+     *
+     * @return PointVente
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return PointVente
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set campagne
+     *
+     * @param \AppBundle\Entity\Campagne $campagne
+     *
+     * @return PointVente
+     */
+    public function setCampagne(\AppBundle\Entity\Campagne $campagne = null)
+    {
+        $this->campagne = $campagne;
+
+        return $this;
+    }
+
+    /**
+     * Get campagne
+     *
+     * @return \AppBundle\Entity\Campagne
+     */
+    public function getCampagne()
+    {
+        return $this->campagne;
     }
 }

@@ -34,11 +34,11 @@ class ProduitController extends Controller
      * @Rest\View(serializerGroups={"produit"})
      * 
      */
-    public function indexJsonAction()
+    public function indexJsonAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $produits = $em->getRepository('AppBundle:Produit')->findAll();
+        $user = $em->getRepository('AppBundle:User')->findOneById($request->headers->get('X-User-Id'));
+        $produits = $em->getRepository('AppBundle:Produit')->findByCampagne($user->getCampagne());
 
         return $produits;
     }
