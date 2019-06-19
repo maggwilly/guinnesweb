@@ -172,29 +172,7 @@ class Ligne
         return $this->commende;
     }
 
-    /**
-     * Set souscripteur
-     *
-     * @param \AppBundle\Entity\Souscripteur $souscripteur
-     *
-     * @return Ligne
-     */
-    public function setSouscripteur(\AppBundle\Entity\Souscripteur $souscripteur = null)
-    {
-        $this->souscripteur = $souscripteur;
 
-        return $this;
-    }
-
-    /**
-     * Get souscripteur
-     *
-     * @return \AppBundle\Entity\Souscripteur
-     */
-    public function getSouscripteur()
-    {
-        return $this->souscripteur;
-    }
 
     /**
      * Set price
