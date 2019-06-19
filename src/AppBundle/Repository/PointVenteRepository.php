@@ -48,6 +48,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          ->addGroupBy('p.telGerant')
          ->addGroupBy('p.ville')
          ->addGroupBy('u.nom')
+         ->addGroupBy('u.id')
          ->addGroupBy('u.username');
          if($limit) 
            return $qb->getQuery()->setMaxResults(10)->getArrayResult();
