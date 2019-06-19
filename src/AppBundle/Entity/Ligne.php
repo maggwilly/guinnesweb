@@ -51,6 +51,11 @@ class Ligne
 
     /**
      * @var int
+     * @ORM\Column(name="lineaire", type="string", length=55, nullable=true)
+     */
+    private $lineaire;
+    /**
+     * @var int
      * @ORM\Column(name="autre", type="string", length=55, nullable=true)
      */
     private $autre;
@@ -67,6 +72,11 @@ class Ligne
      */
     private $invalide;
 
+    /**
+     * @var int
+     * @ORM\Column(name="stock", type="integer", nullable=true)
+     */
+    private $stock;
     /**
      * @var int
      * @ORM\Column(name="nombre_ressources", type="integer", nullable=true)
@@ -123,7 +133,51 @@ class Ligne
     {
         return $this->quantite;
     }
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     * @return Situation
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
 
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer 
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     * @return Situation
+     */
+    public function setLineaire($lineaire)
+    {
+        $this->lineaire = $lineaire;
+
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer 
+     */
+    public function getLineaire()
+    {
+        return $this->lineaire;
+    }
     /**
      * Set produit
      *

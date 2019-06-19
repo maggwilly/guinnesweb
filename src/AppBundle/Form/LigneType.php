@@ -20,6 +20,8 @@ class LigneType extends AbstractType
         ->add('nombreRessources')
         ->add('frigo')
         ->add('gratuite')
+        ->add('lineaire')
+         ->add('stock')
         ->add('autre')
         ->add('affiche')
         ->add('invalide')
