@@ -158,14 +158,14 @@ class CommendeController extends Controller
      */
     public function editJsonAction(Request $request, Commende $commende)
     {
-        $editForm = $this->createForm('AppBundle\Form\CommendeType', $commende);
+      /* $editForm = $this->createForm('AppBundle\Form\CommendeType', $commende);
         $editForm->submit($request->request->all());
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             return  $commende;
-        }
-
-        return $editForm;
+        }*/
+      return  $commende;
+       // return $editForm;
     }
 
     /**
