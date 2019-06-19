@@ -22,7 +22,7 @@ class ProduitRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('p')
         ->leftJoin('p.lignes', 'l')
         ->leftJoin('l.commende', 'c')
-        ->where('p.type=:type')->setParameter('type','produit')
+        ->where('p.type=:type1 or p.type=:type2')->setParameter('type1','produit')->setParameter('type2','lot')
            ->andWhere('p.campagne=:campagne')->setParameter('campagne',$campagne);
          if($startDate!=null){
               $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
