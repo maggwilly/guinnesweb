@@ -7,7 +7,7 @@
          {{ detail.stockFinal}}
      	{% else %}
      		{% if detail.stock is not null and detail.stock>(detail.variante|default(0)) %}
-     	  {{ (detail.stock-(detail.variante|default(0))-(detail.gratuite|default(0))}}
+     	  {{ (detail.stock-(detail.variante|default(0))-(detail.gratuite|default(0)))}}
      	   {% else %}
      	   	--
      		{% endif %}
