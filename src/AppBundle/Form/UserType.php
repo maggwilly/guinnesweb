@@ -38,6 +38,7 @@ class UserType extends AbstractType
         ->add('username', 'text', array('required' => true,'label'=>'Identifiant'))
         ->add('phone', 'text', array('required' => true,'label'=>'telephone'))
         ->add('email', 'text', array('required' => true,'label'=>'Email'))
+        ->add('secteur', 'text', array('required' => false,'label'=>'DEPOT'))
         ->add('campagne', EntityType::class, array(
             'choice_label' => 'nom',
             'class' => 'AppBundle:Campagne'
