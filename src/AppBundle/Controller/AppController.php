@@ -184,7 +184,7 @@ class AppController extends Controller
                 $key=0; 
 
         foreach ($days as $shiet => $day) {
-          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$day,$day,$region);
+          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->venteParPointVente($campagne,$day,$day,$region);
                 if(empty($ventePointVentes))  
                     continue;
              foreach ($ventePointVentes as  $value) {
