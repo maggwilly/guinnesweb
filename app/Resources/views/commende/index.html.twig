@@ -11,13 +11,15 @@
     <table class="table align-items-center table-flush" id="myTable">
         <thead class="thead-light">
             <tr>
-                <th>Date</th>
-                <th>Superviseur</th>
-                <th>Field Soldier</th>
-                <th>Nombre Souscription</th>
-                <th>ID Tablette</th>
-                <th>Insident</th>
-                <th>C. Rendu</th>
+                <th>DATE</th>
+                <th>SUPERVISEUR</th>
+                <th>POINT VENTE</th>
+                <th>SALES</th>
+                <th>GIFT</th>
+                <th>AVARIES</th>
+                <th>NB BP</th>
+                <th>INSIDENT</th>
+                <th>C.RENDU</th>
             </tr>
         </thead>
         <tbody>
@@ -30,8 +32,10 @@
                     {{ commende.user.nom }}
                 </td>
                  <td>{{ commende.pointVente.nom }}</td>
-                 <td>{{ commende.nombreSouscriptions }} ({{ commende.totalCash }} XAF)</td>
-                 <td>{{ commende.pointVente.secteur }}</td>
+                 <td>{{ commende.sales }}</td>
+                 <td>{{ commende.gifts }}</td>
+                 <td>{{ commende.avaries }}</td>
+                 <td>{{ commende.nombreRessources }}</td>
                 <td>
                     {{ commende.typeInsident }}
                 </td>

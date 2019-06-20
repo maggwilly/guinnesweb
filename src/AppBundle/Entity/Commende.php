@@ -209,20 +209,32 @@ class Commende
     }
 
 
-    public function getnombreSouscriptions()
+    public function getSales()
     {
         $total=0;
         foreach ($this->lignes as $key => $ligne) {
+            if($ligne->getQuantite()!=null)
           $total+=$ligne->getQuantite();
         }
         return $total;
     }
 
-        public function getTotalCash()
+    public function getGifts()
     {
         $total=0;
         foreach ($this->lignes as $key => $ligne) {
-          $total+=$ligne->getQuantite()*$ligne->getProduit()->getCout();
+            if($ligne->getGratuite()!=null)
+             $total+=$ligne->getGratuite();
+        }
+        return $total;
+    }
+
+        public function getAvaries()
+    {
+        $total=0;
+        foreach ($this->lignes as $key => $ligne) {
+            if($ligne->getInvalide()!=null)
+             $total+=$ligne->getInvalide();
         }
         return $total;
     }
