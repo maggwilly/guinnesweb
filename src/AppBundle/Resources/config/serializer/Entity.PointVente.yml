@@ -5,6 +5,12 @@ AppBundle\Entity\PointVente:
             groups: ['pointvente','commende']
         nom:
             groups: ['pointvente','commende']
+        ba1:
+            groups: ['pointvente','commende']
+        ba2:
+            groups: ['pointvente','commende']
+        nom:
+            groups: ['pointvente','commende']
         type:
             groups: ['pointvente','full']
         nomGerant:

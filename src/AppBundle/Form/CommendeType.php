@@ -20,6 +20,8 @@ class CommendeType extends AbstractType
         ->add('commentaires')
         ->add('typeInsident')
          ->add('nombreRessources')
+         ->add('ba1')
+         ->add('ba12')
         ->add('date','datetime', array(
               'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',

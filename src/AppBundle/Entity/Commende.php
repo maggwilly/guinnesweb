@@ -99,7 +99,19 @@ class Commende
      * @ORM\Column(name="nombre_ressources", type="integer", nullable=true)
      */
     private $nombreRessources;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ba1", type="string", length=255,nullable=true)
+     */
+    private $ba1;
 
+        /**
+     * @var string
+     *
+     * @ORM\Column(name="ba2", type="string", length=255,nullable=true)
+     */
+     private $ba2;
     /**
      * Constructor
      */
@@ -464,4 +476,29 @@ class Commende
     {
         return $this->commentaires;
     }
+
+    /**
+     * Set ba1
+     *
+     * @param string $ba1
+     *
+     * @return PointVente
+     */
+    public function setBa1($ba1)
+    {
+        $this->ba1 = $ba1;
+
+        return $this;
+    }
+
+    /**
+     * Get ba1
+     *
+     * @return string
+     */
+    public function getBa1()
+    {
+        return $this->ba1;
+    }
+
 }

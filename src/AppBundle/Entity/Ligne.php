@@ -77,6 +77,12 @@ class Ligne
      * @ORM\Column(name="stock", type="integer", nullable=true)
      */
     private $stock;
+
+    /**
+     * @var int
+     * @ORM\Column(name="stock_final", type="integer", nullable=true)
+     */
+    private $stockFinal;
     /**
      * @var int
      * @ORM\Column(name="nombre_ressources", type="integer", nullable=true)
@@ -442,5 +448,29 @@ class Ligne
     public function getInvalide()
     {
         return $this->invalide;
+    }
+
+    /**
+     * Set stockFinal
+     *
+     * @param integer $stockFinal
+     *
+     * @return Ligne
+     */
+    public function setStockFinal($stockFinal)
+    {
+        $this->stockFinal = $stockFinal;
+
+        return $this;
+    }
+
+    /**
+     * Get stockFinal
+     *
+     * @return integer
+     */
+    public function getStockFinal()
+    {
+        return $this->stockFinal;
     }
 }
