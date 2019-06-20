@@ -49,7 +49,7 @@ class CommendeController extends Controller
           return  $this->redirectToRoute('homepage');
          }
         $venteProduits=$em->getRepository('AppBundle:Produit')->venteProduit($campagne,$startDate,$endDate,$region);
-        return $this->render('AppBundle::performances.html.twig', array('colors'=>$colors,
+        return $this->render('AppBundle::performances.html.twig', array(
                          'venteProduits'=>$venteProduits
         ));
     }
