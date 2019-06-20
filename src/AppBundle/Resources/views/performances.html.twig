@@ -28,10 +28,10 @@
                     <th scope="col">BP.</th>
                     <th scope="col">Target.</th>
                     {% for produit in produits %}
-                       <th scope="col">SI_{{produit.nom}}</th>
-                       <th scope="col">SF_{{produit.nom}}</th>
-                       <th scope="col">SAL_{{produit.nom}}</th>
-                      <th scope="col">GIFT_{{produit.nom}}</th>
+                       <th scope="col">SI_{{produit.shortNom}}</th>
+                       <th scope="col">SF_{{produit.shortNom}}</th>
+                       <th scope="col">SAL_{{produit.shortNom}}</th>
+                      <th scope="col">GIFT_{{produit.shortNom}}</th>
                        {% endfor %}
                   </tr>
                   </tr>
