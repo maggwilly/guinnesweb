@@ -49,18 +49,15 @@ class CommendeController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate','first day of this month');
         $endDate=$session->get('endDate', 'last day of this month');
-        $workedDays=$em->getRepository('AppBundle:PointVente')->recapPeriode($startDate,$endDate);
-        $produits=$em->getRepository('AppBundle:Produit')->produits($startDate,$endDate);
+        $campagne=$session->get('campagne');
+      if ($campagne==null) {
+          return  $this->redirectToRoute('homepage');
+         }
+        $venteProduits=$em->getRepository('AppBundle:Produit')->venteProduit($campagne,$startDate,$endDate,$region);
         $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
-        $countAndCashByWeek= $em->getRepository('AppBundle:Ligne')->countAndCashByWeek($startDate,$endDate);
-        $countAndCashByMonth= $em->getRepository('AppBundle:Ligne')->countAndCashByMonth($startDate,$endDate);
         return $this->render('AppBundle::performances.html.twig', array('colors'=>$colors,
                          'colors'=>$colors,
-                         'workedDays'=>$workedDays,
-                         'produits'=>$produits,          
-                         'countAndCashByMonth'=>$countAndCashByMonth,
-                         'countAndCashByWeek'=>$countAndCashByWeek,
- 
+                         'venteProduits'=>$venteProduits
         ));
     }
 
