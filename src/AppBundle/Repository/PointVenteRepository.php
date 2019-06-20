@@ -42,7 +42,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          ->addSelect('p.id')
          ->addSelect('sum(l.gratuite) as gratuite')
          ->addSelect('sum(l.quantite) as quantite')
-         ->addSelect('max(DISTINCT c.date) as nombrejours')
+         ->addSelect('count(DISTINCT c.date) as nombrejours')
          ->addSelect('max(c.nombreRessources) as nombreressources')
          ->addGroupBy('u.username')
          ->addGroupBy('p.id')
