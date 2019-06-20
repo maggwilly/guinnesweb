@@ -11,7 +11,7 @@ use AppBundle\Entity\Campagne;
 class ProduitRepository extends \Doctrine\ORM\EntityRepository
 {
 
-      public function findByCampagne(Campagne $campagne,$all=true){
+      public function findByCampagne(Campagne $campagne=null,$all=true){
            $qb = $this->createQueryBuilder('p')
            ->where('p.campagne=:campagne')->setParameter('campagne', $campagne);
            if(!$all)

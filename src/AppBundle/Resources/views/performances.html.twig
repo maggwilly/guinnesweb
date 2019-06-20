@@ -29,7 +29,12 @@
                     <th scope="col">Sales</th>
                     <th scope="col">Gift.</th>
                     <th scope="col">Target.</th>
-                    <th scope="col">%</th>
+                    {% for produit in produits %}
+                       <th scope="col">SI_{{produit.nom}}</th>
+                       <th scope="col">SF_{{produit.nom}}</th>
+                       <th scope="col">VAR_{{produit.nom}}</th>
+                       {% endfor %}
+                  </tr>
                   </tr>
                 </thead>
                 {% set dayTarget=192 %}
@@ -70,18 +75,7 @@
                      <td>
                        {{ (vente.nombrejours*dayTarget*vente.nombreressources)}}
                     </td>                                       
-                    <td>
-                      {% if vente.nombrejours>0 and vente.nombreressources>0 %}
-                      {% if (vente.quantite*100/(vente.nombrejours*dayTarget*vente.nombreressources))<100 %}
-                      <i class="fas fa-arrow-down text-danger mr-3"></i>
-                    {% else %}
-                      <i class="fas fa-arrow-up text-success mr-3"></i>
-                    {% endif %}
-                  {{ (vente.quantite*100/(vente.nombrejours*dayTarget*vente.nombreressources))|number_format(0, ',', '.') }}%
-                    {% else %}
-                       ---
-                    {% endif %}
-                    </td>                    
+              {{ render(controller( 'AppBundle:App:realisationProduit', { 'id': vente.id }))}}                    
                   </tr
                    {% endfor %}
                  </tbody>
