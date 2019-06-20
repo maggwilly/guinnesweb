@@ -204,9 +204,9 @@ class AppController extends Controller
              foreach ($details as $keyDetail=> $detail) {
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
                 ->setCellValueByColumnAndRow($columm,  ($key+2), 0)
-                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail['stock'])
-                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail['stockFinal'])
-                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail['var']);              
+                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail[0]['stock'])
+                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail[0]['stockFinal'])
+                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail[0]['var']);              
              };
          $key++;                           
            };
