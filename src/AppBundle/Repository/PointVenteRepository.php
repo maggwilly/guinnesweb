@@ -19,7 +19,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
 
     public   function ventePointVente(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null,$limit=true){
 
-      $qb = $this->createQueryBuilder('p')->join('p.user','u')->leftJoin('p.commendes','c')->leftJoin('c.lignes','l');
+      $qb = $this->createQueryBuilder('p')->join('p.user','u')->join('p.commendes','c')->leftJoin('c.lignes','l');
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -64,7 +64,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
 
     public   function venteParPointVente(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null,$limit=true){
 
-      $qb = $this->createQueryBuilder('p')->join('p.user','u')->leftJoin('p.commendes','c')->leftJoin('c.lignes','l');
+      $qb = $this->createQueryBuilder('p')->join('p.user','u')->join('p.commendes','c')->leftJoin('c.lignes','l');
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
