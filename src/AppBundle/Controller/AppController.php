@@ -78,7 +78,7 @@ class AppController extends Controller
         $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
         $details=array();
         foreach ($produits as $key => $produit) {
-         $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente->getId(),$produit->getId(),$startDate, $endDate);
+         $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente->getId(),$produit->getId(),$startDate, $endDate)[0];
         }
        return $this->render('AppBundle::part/produit.html.twig', 
           array(
