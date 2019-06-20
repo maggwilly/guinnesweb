@@ -38,6 +38,11 @@ export_excel:
     defaults: { _controller: "AppBundle:App:venteExcel" }
     methods:  GET
 
+realisation_produit:
+    path:     /realisation/{id}/produit
+    defaults: { _controller: "AppBundle:App:realisationProduit" }
+    methods:  GET
+
 export_excel_pointages:
     path:     /pointages
     defaults: { _controller: "AppBundle:App:pointagesPeriodeExcel" }

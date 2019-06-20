@@ -18,7 +18,7 @@ class ProduitRepository extends \Doctrine\ORM\EntityRepository
              $qb->andWhere('p.type=:type1 or p.type=:type2')
            ->setParameter('type1', 'produit')
            ->setParameter('type2', 'lot');
-         return $qb->addOrderBy('p.nom','asc')->getQuery()->getResult();  
+         return $qb->addOrderBy('p.id','asc')->getQuery()->getResult();  
   }
 
   

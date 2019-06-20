@@ -12,6 +12,7 @@ use AppBundle\Entity\Credentials;
 use FOS\RestBundle\Controller\Annotations as Rest; // alias pour toutes les annotations
 use FOS\RestBundle\View\View; 
 use AppBundle\Entity\PointVente;
+use AppBundle\Entity\Produit;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use AppBundle\Entity\Campagne;
 /**
@@ -53,9 +54,11 @@ class AppController extends Controller
 
         $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
         $rapportInsident=$em->getRepository('AppBundle:Commende')->rapportInsident($campagne,$startDate,$endDate,$region);
+        $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
         return $this->render('AppBundle::index.html.twig', 
           array(
             'colors'=>$colors,
+            'produits'=>$produits,
             'ventePointVentes'=>$ventePointVentes,
             'venteProduits'=>$venteProduits,
             'rapportInsident'=>$rapportInsident,
@@ -64,6 +67,23 @@ class AppController extends Controller
             'countAndCashByWeek'=>$countAndCashByWeek,
           ));
     }
+
+    public function realisationProduitAction( PointVente $pointVente)
+    {
+        $startDate=$session->get('startDate');
+        $endDate=$session->get('endDate');
+         $campagne=$session->get('campagne');
+        $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
+        $details=array();
+        foreach ($produits as $key => $produit) {
+         $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente->getId(),$produit->getId(),$startDate, $endDate);
+        }
+       return $this->render('AppBundle::part/produit.html.twig', 
+          array(
+            'details'=>$details,
+          )); 
+    }
+
 
     public function kpiAction()
     {   
