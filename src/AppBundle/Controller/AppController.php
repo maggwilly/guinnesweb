@@ -204,16 +204,17 @@ class AppController extends Controller
              foreach ($details as $keyDetail=> $detail) {
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
                 ->setCellValueByColumnAndRow($columm,  ($key+2), 0)
-                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail[0]['stock'])
-                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail[0]['stockFinal'])
-                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail[0]['var']);              
+                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail['stock'])
+                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail['stockFinal'])
+                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail['var']);              
              };
          $key++;                           
            };
-        $phpExcelObject->getActiveSheet()->setTitle('DATABASE');
+        
        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         // create the write
-        }             
+        }  
+        $phpExcelObject->getActiveSheet()->setTitle('DATABASE');           
         $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
         // create the response
         $response = $this->get('phpexcel')->createStreamedResponse($writer);

@@ -66,11 +66,11 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
           if($endDate!=null){
            $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
           } 
-        $qb->addOrderBy('p.nom','asc')
+        $qb//->addOrderBy('p.nom','asc')
         ->select('sum(l.stock) as stock')
         ->addSelect('sum(l.stockFinal) as stockFinal')
-        ->addSelect('(sum(l.stock)-sum(l.stockFinal))as var')
-        ->addGroupBy('p.nom');
+        ->addSelect('(sum(l.stock)-sum(l.stockFinal))as var');
+        //->addGroupBy('p.nom');
          return $qb->getQuery()->getArrayResult(); 
   }
 
