@@ -26,18 +26,13 @@ class CommendeController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate','first day of this month');
         $endDate=$session->get('endDate', 'last day of this month');
-        $commendes = $em->getRepository('AppBundle:Commende')->findList(null,null,$startDate,$endDate);
-         $produits=$em->getRepository('AppBundle:Produit')->produits($startDate,$endDate);
-         $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
-         $countAndCashByWeek= $em->getRepository('AppBundle:Ligne')->countAndCashByWeek($startDate,$endDate);
-        $countAndCashByMonth= $em->getRepository('AppBundle:Ligne')->countAndCashByMonth($startDate,$endDate);
+        $campagne=$session->get('campagne');
+       if ($campagne==null) {
+          return  $this->redirectToRoute('homepage');
+         }        
+        $commendes = $em->getRepository('AppBundle:Commende')->findList($campagne,null,null,$startDate,$endDate,$region);
         return $this->render('commende/index.html.twig', array(
-            'colors'=>$colors,
-            'commendes' => $commendes ,
-
-            'countAndCashByMonth'=>$countAndCashByMonth,
-            'countAndCashByWeek'=>$countAndCashByWeek,
-            'produits'=>$produits ));
+            'commendes' => $commendes ));
     }
 
 
@@ -54,9 +49,7 @@ class CommendeController extends Controller
           return  $this->redirectToRoute('homepage');
          }
         $venteProduits=$em->getRepository('AppBundle:Produit')->venteProduit($campagne,$startDate,$endDate,$region);
-        $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
         return $this->render('AppBundle::performances.html.twig', array('colors'=>$colors,
-                         'colors'=>$colors,
                          'venteProduits'=>$venteProduits
         ));
     }
@@ -68,17 +61,14 @@ class CommendeController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate','first day of this month');
         $endDate=$session->get('endDate', 'last day of this month');
-         $produits=$em->getRepository('AppBundle:Produit')->produits($startDate,$endDate);
-        $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
-        $commendes=$em->getRepository('AppBundle:Commende')->findByInsidentList($insident,$startDate,$endDate);
-        $countAndCashByWeek= $em->getRepository('AppBundle:Ligne')->countAndCashByWeek($startDate,$endDate);
-        $countAndCashByMonth= $em->getRepository('AppBundle:Ligne')->countAndCashByMonth($startDate,$endDate);
+        $campagne=$session->get('campagne');
+        if ($campagne==null) {
+            return  $this->redirectToRoute('homepage');
+           }
+          $commendes=$em->getRepository('AppBundle:Commende')->findByInsidentList($campagne,$insident,$startDate,$endDate,$region);
+ 
         return $this->render('commende/index.html.twig',
-         array('commendes' => $commendes ,
-              'colors'=>$colors,        
-                         'countAndCashByMonth'=>$countAndCashByMonth,
-                         'countAndCashByWeek'=>$countAndCashByWeek,
-              'produits'=>$produits, ));
+         array('commendes' => $commendes  ));
     }
 
 
@@ -89,7 +79,11 @@ class CommendeController extends Controller
         $region=$session->get('region');
         $startDate=$session->get('startDate','first day of this month');
         $endDate=$session->get('endDate', 'last day of this month');
-        $commendes = $em->getRepository('AppBundle:Commende')->findList($user,$pointVente,$startDate,$endDate);
+         $campagne=$session->get('campagne');
+        if ($campagne==null) {
+            return  $this->redirectToRoute('homepage');
+           }
+        $commendes = $em->getRepository('AppBundle:Commende')->findList($campagne,$user,$pointVente,$startDate,$endDate,$region);
         return $this->render('commende/index.html.twig', array('commendes' => $commendes  ));
     }
 
