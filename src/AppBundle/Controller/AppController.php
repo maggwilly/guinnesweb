@@ -51,7 +51,6 @@ class AppController extends Controller
 
         $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$startDate,$endDate,$region);
         $venteSuperviseur=$em->getRepository('AppBundle:User')->venteSuperviseur($campagne,$startDate,$endDate,$region);
-
         $colors=array("#FF6384","#36A2EB","#FFCE56","#F7464A","#FF5A5E","#46BFBD", "#5AD3D1","#FDB45C");
         $rapportInsident=$em->getRepository('AppBundle:Commende')->rapportInsident($campagne,$startDate,$endDate,$region);
         $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
