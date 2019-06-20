@@ -210,7 +210,7 @@ class AppController extends Controller
              };
          $key++;                           
            };
-        $phpExcelObject->getActiveSheet()->setTitle('DATABASE -'.$region.'_'.$periode);
+        $phpExcelObject->getActiveSheet()->setTitle('DATABASE');
        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         // create the write
         }             
