@@ -39,7 +39,6 @@ class ProduitController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('AppBundle:User')->findOneById($request->headers->get('X-User-Id'));
         $produits = $em->getRepository('AppBundle:Produit')->findByCampagne($user->getCampagne());
-
         return $produits;
     }
 
