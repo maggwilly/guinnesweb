@@ -501,4 +501,28 @@ class Commende
         return $this->ba1;
     }
 
+    /**
+     * Set ba2
+     *
+     * @param string $ba2
+     *
+     * @return PointVente
+     */
+    public function setBa2($ba2)
+    {
+        $this->ba2 = $ba2;
+
+        return $this;
+    }
+
+    /**
+     * Get ba2
+     *
+     * @return string
+     */
+    public function getBa2()
+    {
+        return $this->ba2;
+    }
+
 }
