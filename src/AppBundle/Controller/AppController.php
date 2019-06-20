@@ -70,6 +70,8 @@ class AppController extends Controller
 
     public function realisationProduitAction( PointVente $pointVente)
     {
+       $session = $this->getRequest()->getSession();
+        $em = $this->getDoctrine()->getManager();
         $startDate=$session->get('startDate');
         $endDate=$session->get('endDate');
          $campagne=$session->get('campagne');
