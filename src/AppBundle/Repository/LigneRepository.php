@@ -99,7 +99,7 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
           } 
         $qb
          ->select('p.nom')
-         ->select('p.type')
+         ->addSelect('p.type')
          ->addSelect('count(DISTINCT pv.id) as nombre')
          ->addSelect('count(l.frigo) as frigo')
          ->addSelect('count(l.affiche) as affiche')
