@@ -133,6 +133,8 @@ class CommendeController extends Controller
         if ($form->isValid()) {
              $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository('AppBundle:User')->findOneById($request->headers->get('X-User-Id'));
+            $pointVente=$commende->getPointVente();
+            $pointVente->setBa1($commende->getBa1())->setBa2($commende->getBa2());
             $commende->setUser($user);
             $em->persist($commende);
             $em->flush();

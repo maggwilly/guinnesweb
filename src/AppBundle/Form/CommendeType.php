@@ -21,7 +21,7 @@ class CommendeType extends AbstractType
         ->add('typeInsident')
          ->add('nombreRessources')
          ->add('ba1')
-         ->add('ba12')
+         ->add('ba2')
         ->add('date','datetime', array(
               'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
