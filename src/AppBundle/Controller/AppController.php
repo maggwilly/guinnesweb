@@ -139,11 +139,15 @@ class AppController extends Controller
 
 
     
-    public function ventePeriodeExcelAction()
+    public function venteExcelAction()
     {
       $em = $this->getDoctrine()->getManager();
       $session = $this->getRequest()->getSession();
-      $region=$session->get('region','Douala');
+       $region=$session->get('region');
+       $campagne=$session->get('campagne');
+        if ($campagne==null) {
+            return  $this->redirectToRoute('homepage');
+           }
       $startDate=$session->get('startDate','first day of this month');
       $endDate=$session->get('endDate', 'last day of this month');
       $periode= $session->get('periode',' 01/01 - 31/12/'.date('Y'));
@@ -152,79 +156,64 @@ class AppController extends Controller
        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
        $phpExcelObject->getProperties()->setCreator("LPM C")
            ->setLastModifiedBy("LPM C")
-           ->setTitle("PERFORMANCE  ".$periode)
-           ->setSubject("PERFORMANCE  de ".$periode)
-           ->setDescription("PERFORMANCE ".$periode)
-           ->setKeywords("PERFORMANCE".$periode)
-           ->setCategory("Rapports DBS");
-           $ativeshiet=0;
+           ->setTitle("REALISATIONS  ".$periode.' '.$region)
+           ->setSubject("REALISATIONS  de ".$periode.' '.$region)
+           ->setDescription("REALISATIONS ".$periode.' '.$region)
+           ->setKeywords("REALISATIONS".$periode)
+           ->setCategory("REALISATIONS GUINNESS");
+          $phpExcelObject->setActiveSheetIndex(0)
+               ->setCellValue('A1', 'N')
+               ->setCellValue('B1', 'VILLE')
+               ->setCellValue('C1', 'WEEK')
+               ->setCellValue('D1', 'DAY')
+               ->setCellValue('E1', 'DATE')
+               ->setCellValue('F1', 'DEPOT')
+               ->setCellValue('G1', 'SUPERVISEUR')
+               ->setCellValue('H1', 'PDV')
+               ->setCellValue('I1', 'BA');
+              $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
+               $columm=9;
+              foreach ($produits as $shiet => $produit) { 
+                $phpExcelObject->getActiveSheet()
+                ->setCellValueByColumnAndRow($columm,1, 'TGT_'.$produit->getNom())
+                ->setCellValueByColumnAndRow($columm+1,1,'SI_'.$produit->getNom())
+                ->setCellValueByColumnAndRow($columm+2,1,'SF_'.$produit->getNom())
+                ->setCellValueByColumnAndRow($columm+3,1,'VR_'.$produit->getNom());
+                $columm+=4;
+            }
+                $key=0; 
+
         foreach ($days as $shiet => $day) {
-                $ventes = $em->getRepository('AppBundle:PointVente')->ventePeriode($day,$day);
-                if(empty($ventes))  
+          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$day,$day,$region);
+                if(empty($ventePointVentes))  
                     continue;
-                $phpExcelObject->createSheet($ativeshiet);
-                $phpExcelObject->setActiveSheetIndex($ativeshiet)
-               ->setCellValue('A1', 'SUPERVISEURS')
-               ->setCellValue('B1', 'NOM & PRENOM')
-               ->setCellValue('C1', 'LABEL')
-               ->setCellValue('D1', 'NUM SERIE')
-               ->setCellValue('E1', 'NUMERO PERSONNEL')
-               ->setCellValue('F1', 'NUMERO SIM ORANGE ')
-               ->setCellValue('G1', 'SOUSCRIPTION')
-               ->setCellValue('H1', 'RENOUVELLEMENT')
-               ->setCellValue('I1', 'ASSUREE')
-               ->setCellValue('J1', 'TELEPHONE')
-               ->setCellValue('K1', 'N DE CONTRACT')
-               ->setCellValue('L1', 'MONTANT')
-               ->setCellValue('M1', 'MODE DE PAIEMENT');
-             foreach ($ventes as $key => $value) {
+             foreach ($ventePointVentes as  $value) {
                 // $startDate= \DateTime::createFromFormat('Y-m-d', $value['createdAt']);
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
-               ->setCellValue('A'.($key+2), $value['supernom'])
-               ->setCellValue('B'.($key+2), $value['fsnom'])
-               ->setCellValue('C'.($key+2), NULL)
-               ->setCellValue('D'.($key+2),  $value['fsserietablette'])
-               ->setCellValue('E'.($key+2), $value['fstelephone'])
-               ->setCellValue('F'.($key+2), $value['fsorange'])
-               ->setCellValue('G'.($key+2), $value['souscription'])
-               ->setCellValue('H'.($key+2), $value['renouvellement'])
-               ->setCellValue('I'.($key+2), $value['snom'].' '.$value['snom'])
-               ->setCellValue('J'.($key+2), $value['stelephone'])
-               ->setCellValue('K'.($key+2), $value['contrat']) 
-               ->setCellValue('L'.($key+2), $value['montant'])
-               ->setCellValue('M'.($key+2), $value['mode']);              
+               ->setCellValue('A'.($key+2), '')
+               ->setCellValue('B'.($key+2), $value['ville'])
+               ->setCellValue('C'.($key+2), $value['week'])
+               ->setCellValue('D'.($key+2), $value['date'])
+               ->setCellValue('E'.($key+2), $value['date'])
+               ->setCellValue('F'.($key+2), $value['secteur'])
+               ->setCellValue('G'.($key+2), $value['sup'])
+               ->setCellValue('H'.($key+2), $value['nom'])
+               ->setCellValue('I'.($key+2), $value['ba1'].' '.$value['ba2']!=null?$value['ba2']:'');  
+               $columm=9;
+               $details = $em->getRepository('AppBundle:Ligne')->detailVente($value['id'],$day,$day);
+             foreach ($details as $keyDetail=> $detail) {
+               $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
+                ->setCellValueByColumnAndRow($columm,  ($key+2), 0)
+                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail['stock'])
+                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail['stockFinal'])
+                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail['var']);              
+             };
+         $key++;                           
            };
-        $phpExcelObject->getActiveSheet()->setTitle('perf '.$day);
+        $phpExcelObject->getActiveSheet()->setTitle('DATABASE -'.$region.'_'.$periode);
        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        // create the writer
-         $ativeshiet++;
-        }
-         
-        {    // $workedDays=$em->getRepository('AppBundle:Commende')->workedDays($startDate,$endDate,true);
-               $workedDays = $em->getRepository('AppBundle:PointVente')->recapPeriode($startDate,$endDate);
-               $phpExcelObject->createSheet($ativeshiet);
-                $phpExcelObject->setActiveSheetIndex($ativeshiet)
-               ->setCellValue('A1', 'SUPERVISEURS')
-               ->setCellValue('B1', 'NOM & PRENOM')
-               ->setCellValue('C1', 'TELE PERSONNEL')
-               ->setCellValue('D1', 'N° TABLETTE')
-               ->setCellValue('E1', 'SOUSCRIPTION')
-               ->setCellValue('F1', 'RENOUVELLEMENT')
-               ->setCellValue('G1', 'TOTAL VENTE')
-               ->setCellValue('H1', 'NOMBRE DE JOURS');
-             foreach ($workedDays as $key => $value) {
-               $phpExcelObject->getActiveSheet()
-               ->setCellValue('A'.($key+2), $value['supernom'])
-               ->setCellValue('B'.($key+2), $value['fsnom'])
-               ->setCellValue('C'.($key+2), $value['fstelephone'])
-               ->setCellValue('D'.($key+2), $value['fsserietablette'])
-               ->setCellValue('E'.($key+2), $value['souscription'])
-               ->setCellValue('F'.($key+2), $value['renouvellement'])
-               ->setCellValue('G'.($key+2), $value['total'])
-               ->setCellValue('H'.($key+2), $value['nbjours']);              
-           };
-        $phpExcelObject->getActiveSheet()->setTitle('RECAP');   
-        }
+        // create the write
+        }             
         $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
         // create the response
         $response = $this->get('phpexcel')->createStreamedResponse($writer);
@@ -241,6 +230,8 @@ class AppController extends Controller
         $response->headers->set('Content-Disposition', $dispositionHeader);
         return $response;        
     }
+
+
 
     public function pointagesPeriodeExcelAction()
     {

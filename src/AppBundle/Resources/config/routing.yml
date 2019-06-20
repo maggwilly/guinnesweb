@@ -35,7 +35,7 @@ homeuser:
 
 export_excel:
     path:     /performances
-    defaults: { _controller: "AppBundle:App:ventePeriodeExcel" }
+    defaults: { _controller: "AppBundle:App:venteExcel" }
     methods:  GET
 
 export_excel_pointages:

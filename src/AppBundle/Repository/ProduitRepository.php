@@ -11,10 +11,14 @@ use AppBundle\Entity\Campagne;
 class ProduitRepository extends \Doctrine\ORM\EntityRepository
 {
 
-      public function findByCampagne(Campagne $campagne){
+      public function findByCampagne(Campagne $campagne,$all=true){
            $qb = $this->createQueryBuilder('p')
            ->where('p.campagne=:campagne')->setParameter('campagne', $campagne);
-         return $qb->getQuery()->getResult();  
+           if(!$all)
+             $qb->andWhere('p.type=:type1 or p.type=:type2')
+           ->setParameter('type1', 'produit')
+           ->setParameter('type2', 'lot');
+         return $qb->addOrderBy('p.nom','asc')->getQuery()->getResult();  
   }
 
   
