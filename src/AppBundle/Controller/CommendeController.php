@@ -48,9 +48,9 @@ class CommendeController extends Controller
       if ($campagne==null) {
           return  $this->redirectToRoute('homepage');
          }
-        $venteProduits=$em->getRepository('AppBundle:Produit')->venteProduit($campagne,$startDate,$endDate,$region);
+          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$startDate,$endDate,$region);
         return $this->render('AppBundle::performances.html.twig', array(
-                         'venteProduits'=>$venteProduits
+                         'ventePointVentes'=>$ventePointVentes
         ));
     }
 
