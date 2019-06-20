@@ -26,13 +26,12 @@
                     <th scope="col">Tel.</th>
                     <th scope="col">Days</th>
                     <th scope="col">BP.</th>
-                    <th scope="col">Sales</th>
-                    <th scope="col">Gift.</th>
                     <th scope="col">Target.</th>
                     {% for produit in produits %}
                        <th scope="col">SI_{{produit.nom}}</th>
                        <th scope="col">SF_{{produit.nom}}</th>
-                       <th scope="col">VAR_{{produit.nom}}</th>
+                       <th scope="col">SAL_{{produit.nom}}</th>
+                      <th scope="col">GIFT_{{produit.nom}}</th>
                        {% endfor %}
                   </tr>
                   </tr>
@@ -65,17 +64,11 @@
                     </td>
                     <td>
                        {{ vente.nombreressources}}
-                    </td> 
-                    <td>
-                       {{ vente.quantite}}
-                    </td>
-                    <td>
-                       {{ vente.gratuite}}
                     </td>                    
                      <td>
                        {{ (vente.nombrejours*dayTarget*vente.nombreressources)}}
                     </td>                                       
-              {{ render(controller( 'AppBundle:App:realisationProduit', { 'id': vente.id }))}}                    
+                  {{ render(controller( 'AppBundle:App:realisationProduit', { 'id': vente.id }))}}                    
                   </tr
                    {% endfor %}
                  </tbody>

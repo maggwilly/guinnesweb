@@ -70,7 +70,8 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
         $qb//->addOrderBy('p.nom','asc')
         ->select('sum(l.stock) as stock')
         ->addSelect('sum(l.stockFinal) as stockFinal')
-        ->addSelect('(sum(l.stock)-sum(l.stockFinal))as variante');
+        ->addSelect('sum(l.quantite)as variante')
+         ->addSelect('sum(l.gratuite)as gratuite');
         //->addGroupBy('p.nom');
          return $qb->getQuery()->getArrayResult(); 
   }
