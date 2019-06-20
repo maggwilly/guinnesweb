@@ -1,0 +1,59 @@
+{% extends "AppBundle::index.html.twig" %}
+
+{% block corps %}
+       <div class="row">
+        <div class="col mb-5 mb-xl-0">
+          <div class="card shadow">
+            <div class="card-header border-0">
+               <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="mb-0">Visibilé</h3>
+                </div>
+              </div>             
+            </div>   
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">PRODUIT</th>
+                    <th scope="col">Frigo </th>
+                    <th scope="col">Affiche </th>
+                    <th scope="col">Lineaire </th>
+                    <th scope="col">Autre support </th>
+                  </tr>
+                  </tr>
+                </thead>
+                  {% set total=0 %}
+                  {% for visibilite in visibilites %}
+                    {% set total=visibilite.nombre %}
+                  {% endfor %}
+                <tbody>
+                  {% for visibilite in visibilites %}
+                  <tr>
+                    <th scope="row">
+                     {{ visibilite.nom }}
+                    </th>
+                    <td>
+                      {{ (visibilite.frigo*100/total)|number_format(0, ',', '.')}}%
+                    </td> 
+                    <td>
+                      {{ (visibilite.affiche*100/total)|number_format(0, ',', '.')}}%
+                    </td> 
+                    <td>
+                      {{ (visibilite.lineaire*100/total)|number_format(0, ',', '.')}}%
+                    </td> 
+                    <td>
+                      {{ (visibilite.autre*100/total)|number_format(0, ',', '.')}}%
+                    </td>                                                                                                    
+                  </tr>
+                   {% endfor %}
+                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+{% block chart %}
+{% endblock %}
