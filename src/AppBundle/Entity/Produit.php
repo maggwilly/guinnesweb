@@ -92,8 +92,8 @@ class Produit
 
     public function getShortNom()
     {
-        $shorts=explode("->",$this->nom)
-        return array_key_exists(1, $shorts)?$shorts[1]:$this->nom;
+        $whatIWant = substr($this->nom, strpos($this->nom, "->") + 1)
+        return $whatIWant;
     }
     /**
      * Set type
