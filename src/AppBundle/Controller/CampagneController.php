@@ -36,6 +36,7 @@ class CampagneController extends Controller
         
           $session = $this->getRequest()->getSession();
           $session->set('campagne',$campagne);
+          $session->set('nomCampagne',$campagne->getNom());
 
         return $this->redirectToRoute('homeuser', array('id' => $campagne->getId()));
     }

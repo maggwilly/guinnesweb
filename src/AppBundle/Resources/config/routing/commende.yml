@@ -8,6 +8,12 @@ commende_performances:
     defaults: { _controller: "AppBundle:Commende:performances"}
     methods:  GET
 
+commende_visibilites:
+    path:     /visibilites/list
+    defaults: { _controller: "AppBundle:Commende:visibilites"}
+    methods:  GET
+
+
 commendes_list_insident:
     path:     /{insident}/list/insident
     defaults: { _controller: "AppBundle:Commende:listByInsident","insident":'' }

@@ -31,7 +31,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          $qb
          ->select('u.username')
          ->addSelect('u.nom as sup')
-         ->addSelect('u.secteur as secteur')
+         ->addSelect('u.secteur')
          ->addSelect('u.id as idSup')
          ->addSelect('p.nom')
          ->addSelect('p.quartier')

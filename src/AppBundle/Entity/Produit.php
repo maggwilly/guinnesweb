@@ -92,7 +92,7 @@ class Produit
 
     public function getShortNom()
     {
-        $whatIWant = substr($this->nom, strpos($this->nom, "->") + 1)
+        $whatIWant = substr($this->nom, strpos($this->nom, "->") + 1);
         return $whatIWant;
     }
     /**

@@ -71,9 +71,47 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
         ->select('sum(l.stock) as stock')
         ->addSelect('sum(l.stockFinal) as stockFinal')
         ->addSelect('sum(l.quantite)as variante')
-         ->addSelect('sum(l.gratuite)as gratuite');
+         ->addSelect('sum(l.gratuite)as gratuite')
+         ->addSelect('count(l.frigo)as frigo')
+         ->addSelect('count(l.affiche) as affiche')
+         ->addSelect('count(l.lineaire) as lineaire')
+         ->addSelect('count(l.autre) as autre')
+         ->addSelect('sum(l.invalide) as invalide')
+         ->addSelect('max(l.mecanisme) as mecanisme')
+         ->addSelect('max(l.nombreRessources) as nombreRessources')
+         ->addSelect('max(l.price) as price');
         //->addGroupBy('p.nom');
          return $qb->getQuery()->getArrayResult(); 
   }
+
+   public function detailVisibilitePromoPrice(Campagne $campagne=null, $startDate=null, $endDate=null,$ville=null){
+        $qb = $this->createQueryBuilder('l')
+        ->join('l.commende', 'c')
+        ->join('c.pointVente', 'pv')
+        ->join('l.produit', 'p')
+        ->where('pv.campagne=:campagne')->setParameter('campagne',$campagne)
+        ->andWhere('p.type<>:type')->setParameter('type', 'lot');
+          if($startDate!=null){
+           $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
+          }
+          if($endDate!=null){
+           $qb->andWhere('c.date is null or c.date<=:endDate')->setParameter('endDate',new \DateTime($endDate));
+          } 
+        $qb
+         ->select('p.nom')
+         ->select('p.type')
+         ->addSelect('count(DISTINCT pv.id) as nombre')
+         ->addSelect('count(l.frigo) as frigo')
+         ->addSelect('count(l.affiche) as affiche')
+         ->addSelect('count(l.lineaire) as lineaire')
+         ->addSelect('count(l.autre) as autre')
+         ->addSelect('sum(l.invalide) as invalide')
+         ->addSelect('max(l.mecanisme) as mecanisme')
+         ->addSelect('count(l.nombreRessources) as nombreRessources')
+         ->addSelect('max(l.price) as price') 
+         ->addGroupBy('p.nom')
+         ->addGroupBy('p.type');
+         return $qb->getQuery()->getArrayResult(); 
+  } 
 
 }

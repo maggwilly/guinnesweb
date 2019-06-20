@@ -56,6 +56,26 @@ class CommendeController extends Controller
         ));
     }
 
+    public function visibilitesAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $this->getRequest()->getSession();
+        $region=$session->get('region');
+        $startDate=$session->get('startDate','first day of this month');
+        $endDate=$session->get('endDate', 'last day of this month');
+        $campagne=$session->get('campagne');
+      if ($campagne==null) {
+          return  $this->redirectToRoute('homepage');
+         }
+
+          $visibilite=$em->getRepository('AppBundle:Ligne')->detailVisibilitePromoPrice($campagne,$startDate,$endDate,$region);
+        return $this->render('AppBundle::visibilite.html.twig', array(
+                        'visibilites'=>$visibilite
+        ));
+    }
+
+
+
     public function listByInsidentAction(Request $request,$insident=null)
     {
         $em = $this->getDoctrine()->getManager();

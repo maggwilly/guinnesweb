@@ -38,7 +38,9 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">SUP</th>
+                    <th scope="col">DEPOT</th>
                     <th scope="col">POS</th>
+                    <th scope="col">BA</th>
                     <th scope="col">Ville</th>
                     <th scope="col">Qtier.</th>
                     <th scope="col">Tel.</th>
@@ -46,10 +48,10 @@
                     <th scope="col">BP.</th>
                     <th scope="col">Target.</th>
                     {% for produit in produits %}
-                       <th scope="col">SI_{{produit.shortNom}}</th>
-                       <th scope="col">SF_{{produit.shortNom}}</th>
-                       <th scope="col">SAL_{{produit.shortNom}}</th>
-                      <th scope="col">GIFT_{{produit.shortNom}}</th>
+                       <th scope="col">STOCK_I_{{produit.shortNom}}</th>
+                       <th scope="col">STOCK_F_{{produit.shortNom}}</th>
+                       <th scope="col">SALE_{{produit.shortNom}}</th>
+                       <th scope="col">GRATUIT_{{produit.shortNom}}</th>
                        {% endfor %}
                   </tr>
                 </thead>
@@ -63,13 +65,20 @@
                       {{ vente.sup|e }}
                    </a>
                     </th>
+                    <td>
+                        {{ vente.secteur|upper}}
+                    </td>                    
                     <th scope="row">
                       <a href="{{ path('commendes_list',{'pointVente':vente.id}) }}">
                       {{ vente.nom|e }}
                      </a>
                     </th>
+                      <td>
+                        {{ vente.ba1|upper}}
+                        {% if vente.ba2 %}/{{ vente.ba2|upper}}{% endif %}
+                    </td>                    
                     <td>
-                        {{ vente.ville }}
+                        {{ vente.ville|upper}}
                     </td>
                     <td>
                         {{ vente.quartier}}
