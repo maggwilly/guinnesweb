@@ -69,22 +69,29 @@ class AppController extends Controller
 
     public function realisationProduitAction( PointVente $pointVente)
     {
-       $session = $this->getRequest()->getSession();
-        $em = $this->getDoctrine()->getManager();
-        $startDate=$session->get('startDate');
-        $endDate=$session->get('endDate');
-         $campagne=$session->get('campagne');
-        $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
-        $details=array();
-        foreach ($produits as $key => $produit) {
-         $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente->getId(),$produit->getId(),$startDate, $endDate)[0];
-        }
+        $details=$this->realisationProduit($pointVente->getId());
        return $this->render('AppBundle::part/produit.html.twig', 
           array(
             'details'=>$details,
           )); 
     }
 
+    public function realisationProduit($pointVente,$startDate=null, $endDate=null)
+    {
+       $session = $this->getRequest()->getSession();
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($startDate))
+           $startDate=$session->get('startDate');
+         if(is_null($endDate))
+             $endDate=$session->get('endDate');
+        $campagne=$session->get('campagne');
+        $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
+        $details=array();
+        foreach ($produits as $key => $produit) {
+         $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente,$produit->getId(),$startDate, $endDate)[0];
+        }
+       return $details; 
+    }
 
     public function kpiAction()
     {   
@@ -191,21 +198,21 @@ class AppController extends Controller
                ->setCellValue('F1', 'DEPOT')
                ->setCellValue('G1', 'SUPERVISEUR')
                ->setCellValue('H1', 'PDV')
-               ->setCellValue('I1', 'BA');
+               ->setCellValue('I1', 'BA')
+               ->setCellValue('J1', 'TGT');
               $produits=$em->getRepository('AppBundle:Produit')->findByCampagne($campagne,false);
-               $columm=9;
+               $columm=10;
               foreach ($produits as $shiet => $produit) { 
                 $phpExcelObject->getActiveSheet()
-                ->setCellValueByColumnAndRow($columm,1, 'TGT_'.$produit->getNom())
-                ->setCellValueByColumnAndRow($columm+1,1,'SI_'.$produit->getNom())
-                ->setCellValueByColumnAndRow($columm+2,1,'SF_'.$produit->getNom())
-                ->setCellValueByColumnAndRow($columm+3,1,'VR_'.$produit->getNom());
-                $columm+=4;
+                ->setCellValueByColumnAndRow($columm+$shiet,1,  'SI_'.$produit->getShortNom())
+                ->setCellValueByColumnAndRow($columm+$shiet+1,1,'SF_'.$produit->getShortNom())
+                ->setCellValueByColumnAndRow($columm+$shiet+2,1,'SALE_'.$produit->getShortNom())
+                ->setCellValueByColumnAndRow($columm+$shiet+3,1,'GRATUIT_'.$produit->getShortNom());
             }
-                $key=0; 
+              $key=0; 
 
         foreach ($days as $shiet => $day) {
-          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->venteParPointVente($campagne,$day,$day,$region);
+          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->ventePointVente($campagne,$day,$day,$region);
                 if(empty($ventePointVentes))  
                     continue;
              foreach ($ventePointVentes as  $value) {
@@ -219,17 +226,19 @@ class AppController extends Controller
                ->setCellValue('F'.($key+2), $value['secteur'])
                ->setCellValue('G'.($key+2), $value['sup'])
                ->setCellValue('H'.($key+2), $value['nom'])
-               ->setCellValue('I'.($key+2), $value['ba1'].' '.$value['ba2']!=null?$value['ba2']:'');  
-               $columm=9;
+               ->setCellValue('I'.($key+2), $value['ba1'].' '.$value['ba2']!=null?$value['ba2']:'')
+               ->setCellValue('J'.($key+2), 192*$value['nombrejours']);  
+               
+               $details=$this->realisationProduit($pointVente->getId())
                $details = $em->getRepository('AppBundle:Ligne')->detailVente($value['id'],$day,$day);
              foreach ($details as $keyDetail=> $detail) {
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
-                ->setCellValueByColumnAndRow($columm,  ($key+2), 0)
-                ->setCellValueByColumnAndRow($columm+1,($key+2), $detail['stock'])
-                ->setCellValueByColumnAndRow($columm+2,($key+2), $detail['stockFinal'])
-                ->setCellValueByColumnAndRow($columm+3,($key+2), $detail['var']);              
+                ->setCellValueByColumnAndRow($columm+$keyDetail,  ($key+2), $detail['stock'])
+                ->setCellValueByColumnAndRow($columm+$keyDetail+1,($key+2), $detail['stockFinal'])
+                ->setCellValueByColumnAndRow($columm+$keyDetail+2,($key+2), $detail['variante'])
+                ->setCellValueByColumnAndRow($columm+$keyDetail+3,($key+2), $detail['gratuite']);              
              };
-         $key++;                           
+           $key++;                           
            };
         
        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
