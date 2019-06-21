@@ -95,12 +95,12 @@ class AppController extends Controller
    
 public function makup($details){
   foreach ($details as $key => &$detail) {
-    if (is_null($detail['stock'])||$detail['stock']<$details['stockFinal']||$detail['stock']<$details['variante']) {
-        $details['stock']=($details['variante']+$details['gratuite']);
-        $details['stockFinal']=0;
+    if (is_null($detail['stock'])||$detail['stock']<$detail['stockFinal']||$detail['stock']<$detail['variante']) {
+        $detail['stock']=($detail['variante']+$detail['gratuite']);
+        $detail['stockFinal']=0;
     }
-    if (is_null($detail['stockFinal'])&&$details['stock']!=null){
-     $details['stockFinal']=($details['stock']-$details['variante']-$details['gratuite']);
+    if (is_null($detail['stockFinal'])&&$detail['stock']!=null){
+     $detail['stockFinal']=($detail['stock']-$detail['variante']-$detail['gratuite']);
     }
   }
 }
