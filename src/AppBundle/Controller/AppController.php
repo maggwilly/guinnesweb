@@ -232,7 +232,7 @@ public function makup($details){
               $key=0; 
  
         foreach ($days as $shiet => $day) {
-          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->venteParPointVente($campagne,$day,$day,$region);
+          $ventePointVentes=$em->getRepository('AppBundle:PointVente')->venteParPointVente($campagne,$day,$day,$region,false);
                 if(empty($ventePointVentes))  
                     continue;
              foreach ($ventePointVentes as  $value) {
