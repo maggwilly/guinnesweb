@@ -229,7 +229,7 @@ class AppController extends Controller
                ->setCellValue('I'.($key+2), $value['ba1'].' '.$value['ba2']!=null?$value['ba2']:'')
                ->setCellValue('J'.($key+2), 192*$value['nombrejours']);  
                
-               $details=$this->realisationProduit($pointVente->getId());
+               $details=$this->realisationProduit($value['id']);
              foreach ($details as $keyDetail=> $detail) {
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
                 ->setCellValueByColumnAndRow($columm+$keyDetail,  ($key+2), $detail['stock'])
