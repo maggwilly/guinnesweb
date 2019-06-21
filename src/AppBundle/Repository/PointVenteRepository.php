@@ -91,6 +91,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          ->addGroupBy('u.nom')
          ->addGroupBy('c.week')
          ->addGroupBy('c.date')
+         ->addSelect('count(DISTINCT c.date) as nombrejours')
          ->addGroupBy('u.secteur');
          if($limit) 
            return $qb->getQuery()->setMaxResults(10)->getArrayResult();
