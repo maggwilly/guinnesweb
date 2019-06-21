@@ -103,6 +103,7 @@ public function makup($details){
      $detail['stockFinal']=($detail['stock']-$detail['variante']-$detail['gratuite']);
     }
   }
+  return $details;
 }
 
     public function kpiAction()
