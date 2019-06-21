@@ -79,7 +79,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          ->addSelect('p.nom')
          ->addSelect('p.ba1')
          ->addSelect('p.ba2')
-         ->addSelect('c.week')
+         ->addSelect('c.weekText as week')
          ->addSelect('p.ville')
          ->addSelect('p.id')
          ->addSelect('c.date')
@@ -89,7 +89,7 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          ->addGroupBy('p.ba1')
          ->addGroupBy('p.ba2')
          ->addGroupBy('u.nom')
-         ->addGroupBy('c.week')
+         ->addGroupBy('c.weekText')
          ->addGroupBy('c.date')
          ->addSelect('count(DISTINCT c.date) as nombrejours')
          ->addGroupBy('u.secteur');

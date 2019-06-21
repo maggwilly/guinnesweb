@@ -90,8 +90,20 @@ class AppController extends Controller
         foreach ($produits as $key => $produit) {
          $details[]=$em->getRepository('AppBundle:Ligne')->detailVente($pointVente,$produit->getId(),$startDate, $endDate)[0];
         }
-       return $details; 
+       return $this->makup($details); 
     }
+   
+public function makup($details){
+  foreach ($details as $key => &$detail) {
+    if (is_null($detail['stock'])||$detail['stock']<$details['stockFinal']||$detail['stock']<$details['variante']) {
+        $details['stock']=($details['variante']+$details['gratuite']);
+        $details['stockFinal']=0;
+    }
+    if (is_null($detail['stockFinal'])&&$details['stock']!=null){
+     $details['stockFinal']=($details['stock']-$details['variante']-$details['gratuite']);
+    }
+  }
+}
 
     public function kpiAction()
     {   
@@ -212,7 +224,7 @@ class AppController extends Controller
             }
              $columm=10;
               $key=0; 
-
+ 
         foreach ($days as $shiet => $day) {
           $ventePointVentes=$em->getRepository('AppBundle:PointVente')->venteParPointVente($campagne,$day,$day,$region);
                 if(empty($ventePointVentes))  
@@ -221,14 +233,14 @@ class AppController extends Controller
                 // $startDate= \DateTime::createFromFormat('Y-m-d', $value['createdAt']);
                $phpExcelObject->getActiveSheet()//->setActiveSheetIndex($shiet)
                ->setCellValue('A'.($key+2), '')
-               ->setCellValue('B'.($key+2), $value['ville'])
+               ->setCellValue('B'.($key+2), strtoupper($value['ville']))
                ->setCellValue('C'.($key+2), $value['week'])
                ->setCellValue('D'.($key+2), $value['date'])
                ->setCellValue('E'.($key+2), $value['date'])
-               ->setCellValue('F'.($key+2), $value['secteur'])
-               ->setCellValue('G'.($key+2), $value['sup'])
-               ->setCellValue('H'.($key+2), $value['nom'])
-               ->setCellValue('I'.($key+2), $value['ba1'].' '.$value['ba2']!=null?$value['ba2']:'')
+               ->setCellValue('F'.($key+2), strtoupper($value['secteur']))
+               ->setCellValue('G'.($key+2), strtoupper($value['sup']))
+               ->setCellValue('H'.($key+2), strtoupper($value['nom']))
+               ->setCellValue('I'.($key+2), strtoupper($value['ba1'].' '.$value['ba2']!=null?$value['ba2']:''))
                ->setCellValue('J'.($key+2), 192*$value['nombrejours']);  
                
                $details=$this->realisationProduit($value['id']);

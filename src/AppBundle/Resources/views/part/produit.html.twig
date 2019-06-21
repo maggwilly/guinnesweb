@@ -1,11 +1,12 @@
 {% for detail in details %}
 
-	{% set stock=detail.stock|default(detail.variante) %}
+	{% set stock=detail.stock|default(detail.variante+detail.gratuite|default(0)) %}
 	{% set stockFinal=detail.stockFinal %}
      <td>
        {% if stock<detail.variante %}
      	{{ detail.variante }}
-     	{% set stock=detail.variante %}
+     	{% set stock=(detail.variante+detail.gratuite|default(0)) %}
+        {% set stockFinal=0 %}
      	{% else %}
      	  {{ stock}}
      	{% endif %}
