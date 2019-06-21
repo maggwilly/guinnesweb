@@ -236,7 +236,7 @@ class AppController extends Controller
                 ->setCellValueByColumnAndRow($columm+$keyDetail+1,($key+2), $detail['stockFinal'])
                 ->setCellValueByColumnAndRow($columm+$keyDetail+2,($key+2), $detail['variante'])
                 ->setCellValueByColumnAndRow($columm+$keyDetail+3,($key+2), $detail['gratuite']);
-                $columm+=4             
+                $columm+=4;           
              };
              $columm=10;
            $key++;                           
