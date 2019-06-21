@@ -102,6 +102,8 @@ public function makup($details){
     if (is_null($detail['stockFinal'])&&$detail['stock']!=null){
      $detail['stockFinal']=($detail['stock']-$detail['variante']-$detail['gratuite']);
     }
+    if($detail['stockFinal']<0)
+        $detail['stockFinal']=0;
   }
   return $details;
 }
