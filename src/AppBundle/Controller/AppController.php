@@ -208,7 +208,9 @@ class AppController extends Controller
                 ->setCellValueByColumnAndRow($columm+$shiet+1,1,'SF_'.$produit->getShortNom())
                 ->setCellValueByColumnAndRow($columm+$shiet+2,1,'SALE_'.$produit->getShortNom())
                 ->setCellValueByColumnAndRow($columm+$shiet+3,1,'GRATUIT_'.$produit->getShortNom());
+                $columm+=4; 
             }
+             $columm=10;
               $key=0; 
 
         foreach ($days as $shiet => $day) {
