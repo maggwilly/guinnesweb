@@ -74,35 +74,24 @@ class PointVenteRepository extends \Doctrine\ORM\EntityRepository
          $qb->andWhere('u.type=:type')->setParameter('type','superviseur') 
          ->andWhere('u.campagne=:campagne')->setParameter('campagne',$campagne);
          $qb
-         ->select('u.username')
-         ->addSelect('u.nom as sup')
+         ->select('u.nom as sup')
          ->addSelect('u.secteur as secteur')
-         ->addSelect('u.id as idSup')
          ->addSelect('p.nom')
-         ->addSelect('p.quartier')
          ->addSelect('p.ba1')
          ->addSelect('p.ba2')
          ->addSelect('c.week')
-         ->addSelect('p.telGerant')
          ->addSelect('p.ville')
          ->addSelect('p.id')
-         ->addSelect('sum(l.gratuite) as gratuite')
-         ->addSelect('sum(l.quantite) as quantite')
          ->addSelect('c.date')
-         ->addGroupBy('u.username')
          ->addGroupBy('p.id')
          ->addGroupBy('p.nom')
-         ->addGroupBy('p.quartier')
-         ->addGroupBy('p.telGerant')
          ->addGroupBy('p.ville')
          ->addGroupBy('p.ba1')
          ->addGroupBy('p.ba2')
          ->addGroupBy('u.nom')
          ->addGroupBy('c.week')
          ->addGroupBy('c.date')
-         ->addGroupBy('u.id')
-         ->addGroupBy('u.username')
-          ->addGroupBy('u.secteur');
+         ->addGroupBy('u.secteur');
          if($limit) 
            return $qb->getQuery()->setMaxResults(10)->getArrayResult();
         return $qb->getQuery()->getArrayResult(); 
