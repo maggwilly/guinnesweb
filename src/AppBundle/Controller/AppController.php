@@ -365,9 +365,12 @@ public function makup($details){
 
 public function getWorkingDays($startDate, $endDate)
 {
+   
     $date1 = new \DateTime($startDate);
     $date2 = new \DateTime($endDate);
-    if ($date1 >= $date2) {
+    if($date1 == $date2)
+       return [$date1->format('Y-m-d')];
+    if ($date1 > $date2) {
         return [];
     } else {
         $no_days  = [];
