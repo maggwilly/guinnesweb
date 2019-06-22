@@ -16,8 +16,15 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
    public function countAndCashByWeek(Campagne $campagne=null, $startDate=null, $endDate=null,$ville=null){
         $qb = $this->createQueryBuilder('l')
         ->join('l.commende', 'c')
+        ->join('c.pointVente','pv')
+        ->join('pv.user','u')
         ->join('l.produit', 'p')
-         ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
+         ->where('p.campagne=:campagne')
+         ->setParameter('campagne',$campagne);
+            if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -37,7 +44,14 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('l')
         ->join('l.commende', 'c')
         ->join('l.produit', 'p')
-        ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
+        ->join('c.pointVente','pv')
+        ->join('pv.user','u')
+        ->where('p.campagne=:campagne')
+        ->setParameter('campagne',$campagne);
+        if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
          if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
@@ -88,9 +102,16 @@ class LigneRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('l')
         ->join('l.commende', 'c')
         ->join('c.pointVente', 'pv')
+        ->join('pv.user','u')
         ->join('l.produit', 'p')
-        ->where('pv.campagne=:campagne')->setParameter('campagne',$campagne)
-        ->andWhere('p.type<>:type')->setParameter('type', 'lot');
+        ->where('pv.campagne=:campagne')
+        ->setParameter('campagne',$campagne)
+        ->andWhere('p.type<>:type')
+        ->setParameter('type', 'lot');
+          if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
           if($startDate!=null){
            $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }

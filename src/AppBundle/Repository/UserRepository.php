@@ -16,6 +16,10 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         ->leftJoin('u.pointVentes','p')
         ->leftJoin('p.commendes','c')
         ->leftJoin('c.lignes','l');
+        if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
          if($startDate!=null){
             $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }

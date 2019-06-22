@@ -33,6 +33,8 @@ class UserType extends AbstractType
           'Nkongsamba'=>'Nkongsamba',
           'Sangmelima'=>'Sangmelima',
           'Bangangte'=>'Bangangte',
+          'Bafia'=>'Bafia',
+          'Mbouda'=>'Mbouda',
           'Ebolowa'=>'Ebolowa',
         )))
         ->add('username', 'text', array('required' => true,'label'=>'Identifiant'))

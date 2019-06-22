@@ -23,9 +23,13 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
          return $qb->getQuery()->getResult();  
   }
 
-  	  	public function findList(Campagne $campagne,User $user=null, PointVente $pointVente=null,$startDate=null, $endDate=null){
-           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+  	  	public function findList(Campagne $campagne,User $user=null, PointVente $pointVente=null,$startDate=null, $endDate=null,$ville=null){
+           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')->join('p.user','u')
            ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
+          if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
            if($pointVente!=null){
            $qb ->andWhere('c.pointVente=:pointVente')->setParameter('pointVente', $pointVente);
             }
@@ -42,9 +46,13 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
   }
 
 
-    public function findByInsidentList(Campagne $campagne,$insident, $startDate=null, $endDate=null){
-           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+    public function findByInsidentList(Campagne $campagne,$insident, $startDate=null, $endDate=null,$ville=null){
+           $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')->join('p.user','u')
            ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
+           if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
            if($insident!=null){
            $qb ->andWhere('c.typeInsident=:typeInsident')->setParameter('typeInsident', $insident);
             }
@@ -59,8 +67,12 @@ class CommendeRepository extends \Doctrine\ORM\EntityRepository
 
 
       public  function rapportInsident(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
-        $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')
+        $qb = $this->createQueryBuilder('c')->join('c.pointVente','p')->join('p.user','u')
            ->where('p.campagne=:campagne')->setParameter('campagne',$campagne);
+          if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
          if($startDate!=null){
               $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }

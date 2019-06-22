@@ -25,9 +25,13 @@ class ProduitRepository extends \Doctrine\ORM\EntityRepository
 	    public  function venteProduit(Campagne $campagne=null,$startDate=null, $endDate=null,$ville=null){
         $qb = $this->createQueryBuilder('p')
         ->leftJoin('p.lignes', 'l')
-        ->leftJoin('l.commende', 'c')
+        ->leftJoin('l.commende', 'c')->join('c.pointVente','pv')->join('pv.user','u')
         ->where('p.type=:type1 or p.type=:type2')->setParameter('type1','produit')->setParameter('type2','lot')
            ->andWhere('p.campagne=:campagne')->setParameter('campagne',$campagne);
+            if($ville!=null){
+           $qb->andWhere('u.ville=:ville')
+          ->setParameter('ville', $ville);
+          }
          if($startDate!=null){
               $qb->andWhere('c.date is null or c.date>=:startDate')->setParameter('startDate', new \DateTime($startDate));
           }
