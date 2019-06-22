@@ -129,7 +129,6 @@ public function makup($details){
 
     public function setPeriodeAction(Request $request)
     {
-        $region=$request->request->get('region');
         $periode= $request->request->get('periode');
         $dates = explode(" - ", $periode);
         $startDate=$dates[0];
@@ -138,7 +137,6 @@ public function makup($details){
         $startDate= \DateTime::createFromFormat($format, $dates[0]);
         $endDate= \DateTime::createFromFormat($format, $dates[1]);
         $session = $this->getRequest()->getSession();
-        $session->set('region',$region);
         $session->set('startDate',$startDate->format('Y-m-d'));
         $session->set('endDate',$endDate->format('Y-m-d'));
         $session->set('periode',$periode);
