@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * PointVente
- *
  * @ORM\Table(name="point_vente")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PointVenteRepository")
  */
@@ -14,7 +13,6 @@ class PointVente
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,7 +21,6 @@ class PointVente
 
     /**
      * @var string
-     *
      * @ORM\Column(name="nom", type="string", length=255)
      */
     private $nom;
@@ -91,9 +88,9 @@ class PointVente
      */
     private $nomSecteur;
 
+        
         /**
      * @var string
-     *
      * @ORM\Column(name="latitude",  type="decimal", precision=10, scale=6, nullable=true)
      */
     private $latitude;
@@ -107,12 +104,12 @@ class PointVente
 
     /**
      * @var string
-     *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
-        /**
+    
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User",inversedBy="pointVentes")
      * @var User
      */
@@ -124,12 +121,10 @@ class PointVente
      */
     private $campagne;
 
-        /**
+    /**
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Commende", mappedBy="pointVente", cascade={"persist","remove"})
    */
     private $commendes;
-
-
 
     public function __construct(\AppBundle\Entity\User $user = null)
     {
